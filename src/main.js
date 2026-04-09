@@ -162,3 +162,22 @@ if (track) track.innerHTML += track.innerHTML;
 })();
 
 console.log('ARAKU Valley Coffee – frame sequence initialized');
+
+/* ─── Scroll to top ─── */
+const scrollToTopBtn = document.getElementById('scroll-to-top');
+if (scrollToTopBtn) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > window.innerHeight) {
+      scrollToTopBtn.classList.add('show');
+    } else {
+      scrollToTopBtn.classList.remove('show');
+    }
+  }, { passive: true });
+
+  scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
