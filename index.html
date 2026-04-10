@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Araku — Valley Coffee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+  <!-- AMBIENT GLOWS -->
+  <div style="position:fixed; inset:0; z-index:-999; pointer-events:none; overflow:hidden;">
+    <div style="position:absolute; width:60vw; height:60vw; background:radial-gradient(circle, var(--terra) 0%, transparent 60%); top:-20%; left:-20%; opacity:0.12; filter:blur(80px); border-radius:50%;"></div>
+    <div style="position:absolute; width:70vw; height:70vw; background:radial-gradient(circle, var(--sage) 0%, transparent 60%); bottom:-30%; right:-20%; opacity:0.08; filter:blur(100px); border-radius:50%;"></div>
+  </div>
+
+<!-- PRELOADER -->
+<div id="preloader" class="preloader">
+  <div class="preloader-overlay"></div>
+  <div class="preloader-content">
+    <div class="preloader-logo-wrap">
+      <span class="preloader-logo">ARAKU</span>
+    </div>
+    <div class="preloader-line"><div class="preloader-line-inner"></div></div>
+    <div class="preloader-kicker">Cultivating in the Eastern Ghats</div>
+  </div>
+</div>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- INTRO SEQUENCE (scroll-driven frame animation) -->
+<div class="intro-scroll-container" id="intro-scroll">
+  <div class="intro-sticky">
+    <canvas id="intro-canvas"></canvas>
+    <div class="intro-hero-content">
+      <h1 class="intro-brand">araku</h1>
+      <div class="intro-tagline">
+        <span id="tagline-l1">ROOTED IN</span>
+        <span id="tagline-l2">THE CLOUDS</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">ARAKU<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#origin">Our Story</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="#journal">Journal</a></li>
+    <li><a href="#locations">Locate Us</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="reserve.html" style="text-decoration:none; margin-right: 20px; color: var(--cream); display:flex; align-items:center;" title="Book a Table">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+    </a>
+    <a href="shop.html" class="nav-shop" style="text-decoration:none;">Shop Coffee</a>
+    <div class="nav-cart" id="open-cart" title="View Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="cart-count">0</span>
+    </div>
+    <div class="nav-ham" style="margin-left: 20px;">
+      <span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-video-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-kicker">Eastern Ghats · 900m Altitude · India</div>
+      <h1 class="hero-h1">FROM THE<br><em>Valley</em><br>TO YOUR CUP</h1>
+      <p class="hero-h1-sub">Where ancient forests meet artisan craft</p>
+      <div class="hero-btns">
+        <button class="btn-fill">Explore Coffee</button>
+        <button class="btn-outline">Our Story</button>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <p class="hero-meta-big">Hand-picked by tribal farmers in the hills of Araku Valley — every bean carries the story of the land.</p>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <div class="scroll-bar"></div>
+    <span class="scroll-lbl">Discover</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-band">
+  <div class="marquee-track">
+    <span class="marquee-item">Single Origin <span class="marquee-sep">✦</span> Araku Valley</span>
+    <span class="marquee-item">Hand Picked <span class="marquee-sep">✦</span> Shade Grown</span>
+    <span class="marquee-item">Tribal Heritage <span class="marquee-sep">✦</span> Est. 2007</span>
+    <span class="marquee-item">Forest Certified <span class="marquee-sep">✦</span> 900m Altitude</span>
+    <span class="marquee-item">Award Winning <span class="marquee-sep">✦</span> Paris Trophy</span>
+    <span class="marquee-item">Single Origin <span class="marquee-sep">✦</span> Araku Valley</span>
+    <span class="marquee-item">Hand Picked <span class="marquee-sep">✦</span> Shade Grown</span>
+    <span class="marquee-item">Tribal Heritage <span class="marquee-sep">✦</span> Est. 2007</span>
+    <span class="marquee-item">Forest Certified <span class="marquee-sep">✦</span> 900m Altitude</span>
+    <span class="marquee-item">Award Winning <span class="marquee-sep">✦</span> Paris Trophy</span>
+  </div>
+</div>
+
+<!-- ORIGIN -->
+<section class="origin" id="origin">
+  <div class="origin-photo">
+    <div class="origin-photo-overlay"></div>
+  </div>
+  <div class="origin-text">
+    <div class="section-eyebrow">The Origin Story</div>
+    <h2 class="origin-h2 reveal">Where the<br>forest becomes<br><em>your coffee</em></h2>
+    <p class="origin-body reveal">Nestled in the Eastern Ghats at 900 metres above sea level, Araku Valley is home to one of India's most extraordinary coffees. Grown under a dense canopy of native trees by indigenous tribal communities, each bean absorbs the mineral richness of volcanic soil and highland mists.</p>
+    <div class="origin-stats reveal">
+      <div>
+        <div class="ostat-num">900<span style="font-size:22px;font-weight:300;">m</span></div>
+        <div class="ostat-lbl">Altitude</div>
+      </div>
+      <div>
+        <div class="ostat-num">10K+</div>
+        <div class="ostat-lbl">Tribal Farmers</div>
+      </div>
+      <div>
+        <div class="ostat-num">18</div>
+        <div class="ostat-lbl">Years of Craft</div>
+      </div>
+    </div>
+    <button class="btn-outline reveal" style="border-color:rgba(201,168,76,0.4);color:var(--cream);align-self:flex-start;">Read Our Story</button>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="products-top">
+    <div>
+      <div class="section-eyebrow" style="margin-bottom:16px;">Our Collection</div>
+      <h2 class="products-h2">Curated for<br><em>connoisseurs</em></h2>
+    </div>
+    <p class="products-sub">Each blend tells the story of a specific microclimate, elevation, and drying method in the valley.</p>
+  </div>
+  <div class="product-tabs">
+    <button class="ptab active">All</button>
+    <button class="ptab">Whole Bean</button>
+    <button class="ptab">Ground</button>
+    <button class="ptab">Cold Brew</button>
+    <button class="ptab">Capsules</button>
+  </div>
+  <div class="products-grid">
+    <div class="product-card glass-panel" onclick="window.addToCart('p1')">
+      <div class="product-img-bg p1"></div>
+      <div class="product-overlay"></div>
+      <div class="product-info">
+        <div class="product-tag">Signature Blend</div>
+        <div class="product-name">Grand Reserve<br>Espresso</div>
+        <div class="product-origin">Araku Valley, Lot 12 — 950m</div>
+        <div class="product-footer">
+          <span class="product-price">₹850</span>
+          <button class="product-add" onclick="event.stopPropagation(); window.addToCart('p1')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card glass-panel" onclick="window.addToCart('p2')">
+      <div class="product-img-bg p2"></div>
+      <div class="product-overlay"></div>
+      <div class="product-info">
+        <div class="product-tag">Single Origin</div>
+        <div class="product-name">Washed Natural</div>
+        <div class="product-origin">Eastern Ghats — 920m</div>
+        <div class="product-footer">
+          <span class="product-price">₹680</span>
+          <button class="product-add" onclick="event.stopPropagation(); window.addToCart('p2')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card glass-panel" onclick="window.addToCart('p3')">
+      <div class="product-img-bg p3"></div>
+      <div class="product-overlay"></div>
+      <div class="product-info">
+        <div class="product-tag">Seasonal</div>
+        <div class="product-name">Forest Honey</div>
+        <div class="product-origin">Tribal Lot — 880m</div>
+        <div class="product-footer">
+          <span class="product-price">₹720</span>
+          <button class="product-add" onclick="event.stopPropagation(); window.addToCart('p3')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card glass-panel" onclick="window.addToCart('p4')">
+      <div class="product-img-bg p4"></div>
+      <div class="product-overlay"></div>
+      <div class="product-info">
+        <div class="product-tag">Cold Brew</div>
+        <div class="product-name">Midnight Bloom</div>
+        <div class="product-origin">Dark Roast Blend — 900m</div>
+        <div class="product-footer">
+          <span class="product-price">₹940</span>
+          <button class="product-add" onclick="event.stopPropagation(); window.addToCart('p4')">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-premium" id="process">
+  <div class="process-sticky-pane">
+    <div class="section-eyebrow" style="color:var(--terra);">
+      <span style="display:inline-block;width:20px;height:1px;background:var(--terra);margin-right:12px;"></span>
+      From Seed to Cup
+    </div>
+    <h2 class="process-h2">The art of<br><em>our process</em></h2>
+    <p class="process-sub">Every step is a mindful act — from the seed planted in forest shade to the cup that reaches your hands.</p>
+  </div>
+  
+  <div class="process-scroll-pane">
+    <div class="process-card reveal">
+      <div class="p-card-img" style="background-image:url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80');"></div>
+      <div class="p-card-content">
+        <div class="p-card-num">01</div>
+        <div class="p-card-text">
+          <h3 class="p-card-title">Cultivate</h3>
+          <p class="p-card-desc">Seeds nurtured under native forest canopy at 900m with volcanic soil.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="process-card reveal">
+      <div class="p-card-img" style="background-image:url('https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?w=800&q=80');"></div>
+      <div class="p-card-content">
+        <div class="p-card-num">02</div>
+        <div class="p-card-text">
+          <h3 class="p-card-title">Harvest</h3>
+          <p class="p-card-desc">Hand-picked at peak ripeness by skilled tribal farmers.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="process-card reveal">
+      <div class="p-card-img" style="background-image:url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=800&q=80');"></div>
+      <div class="p-card-content">
+        <div class="p-card-num">03</div>
+        <div class="p-card-text">
+          <h3 class="p-card-title">Process</h3>
+          <p class="p-card-desc">Washed or natural method on elevated raised beds, slow dried.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="process-card reveal">
+      <div class="p-card-img" style="background-image:url('https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=800&q=80');"></div>
+      <div class="p-card-content">
+        <div class="p-card-num">04</div>
+        <div class="p-card-text">
+          <h3 class="p-card-title">Roast</h3>
+          <p class="p-card-desc">Artisan roasted in small batches to order for peak freshness.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="process-card reveal">
+      <div class="p-card-img" style="background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&q=80');"></div>
+      <div class="p-card-content">
+        <div class="p-card-num">05</div>
+        <div class="p-card-text">
+          <h3 class="p-card-title">Deliver</h3>
+          <p class="p-card-desc">Sealed, nitrogen-flushed, and shipped within 48 hours of roasting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <div class="quote-bg"></div>
+  <div class="quote-overlay"></div>
+  <div class="quote-content">
+    <span class="quote-mark">"</span>
+    <p class="quote-text">This is not merely coffee. This is a conversation between the ancient forest, the hands that tended it, and the cup you hold.</p>
+    <div class="quote-author">— Manoj Kumar, Head of Roasting, Araku</div>
+  </div>
+</section>
+
+<!-- JOURNAL -->
+<section class="journal-premium" id="journal">
+  <div class="jp-header reveal">
+    <div class="jp-title-block">
+      <div class="section-eyebrow" style="color:var(--gold);">
+        <span style="display:inline-block;width:20px;height:1px;background:var(--gold);margin-right:12px;"></span>
+        The Araku Journal
+      </div>
+      <h2 class="jp-h2">Stories from<br>the <em>valley</em></h2>
+    </div>
+    <a href="#" class="jp-view-all">View All Stories</a>
+  </div>
+  
+  <div class="jp-grid">
+    <div class="jp-featured reveal">
+      <div class="jp-feat-img" style="background-image:url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1200&q=80');"></div>
+      <div class="jp-feat-content">
+        <div class="jp-meta">
+          <span class="jp-cat">Origin</span>
+          <span class="jp-date">March 12, 2026</span>
+        </div>
+        <h3 class="jp-feat-title">How the Eastern Ghats shaped the world's most nuanced coffee</h3>
+        <p class="jp-feat-excerpt">The altitude, mist, and mineral-rich soil of Araku Valley create a microclimate unlike anywhere else on Earth — and it shows in every sip.</p>
+        <div class="jp-read-more">Read Article <span>⟶</span></div>
+      </div>
+    </div>
+    
+    <div class="jp-list">
+      <a href="#" class="jp-list-item reveal">
+        <div class="jp-li-img" style="background-image:url('https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?w=600&q=80');"></div>
+        <div class="jp-li-content">
+          <div class="jp-meta">
+            <span class="jp-cat">Community</span>
+            <span class="jp-date">Feb 28</span>
+          </div>
+          <h4 class="jp-li-title">Ten thousand farmers, one vision</h4>
+        </div>
+        <div class="jp-li-arrow">↗</div>
+      </a>
+      
+      <a href="#" class="jp-list-item reveal">
+        <div class="jp-li-img" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80');"></div>
+        <div class="jp-li-content">
+          <div class="jp-meta">
+            <span class="jp-cat">Craft</span>
+            <span class="jp-date">Feb 14</span>
+          </div>
+          <h4 class="jp-li-title">The quiet art of the honey process</h4>
+        </div>
+        <div class="jp-li-arrow">↗</div>
+      </a>
+      
+      <a href="#" class="jp-list-item reveal">
+        <div class="jp-li-img" style="background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80');"></div>
+        <div class="jp-li-content">
+          <div class="jp-meta">
+            <span class="jp-cat">Roast</span>
+            <span class="jp-date">Jan 30</span>
+          </div>
+          <h4 class="jp-li-title">Mastering the delicate dark roast</h4>
+        </div>
+        <div class="jp-li-arrow">↗</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SUSTAINABILITY PREMIUM -->
+<section class="sustain-premium">
+  <div class="sp-head reveal">
+    <div class="section-eyebrow" style="color:var(--terra); display:flex; justify-content:center; align-items:center;">
+      <span style="display:inline-block;width:30px;height:1px;background:var(--terra);margin-right:12px;"></span>
+      Our Promise
+      <span style="display:inline-block;width:30px;height:1px;background:var(--terra);margin-left:12px;"></span>
+    </div>
+    <h2 class="sp-h2">Beyond <em>Sustainable</em></h2>
+  </div>
+  
+  <div class="sp-grid">
+    <div class="sp-card reveal">
+      <div class="sp-number">01</div>
+      <div class="sp-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V12 M7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 M17 14c2.76 0 5-2.24 5-5s-2.24-5-5-5 M12 6c-2.76 0-5-2.24-5-5s2.24-5 5-5"/>
+        </svg>
+      </div>
+      <h3 class="sp-title">Forest Positive</h3>
+      <p class="sp-body">Every bag sold plants three native trees in Araku Valley's degraded forest buffer zones. We have planted 2.4 million trees to date.</p>
+      <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800&q=80');"></div>
+      <div class="sp-overlay"></div>
+    </div>
+
+    <div class="sp-card reveal">
+      <div class="sp-number">02</div>
+      <div class="sp-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <h3 class="sp-title">Zero Waste</h3>
+      <p class="sp-body">Coffee husks become biochar. Water is recycled through reed beds. Our packaging is 100% home-compostable within 180 days.</p>
+      <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1533038590840-1cbea6a6bb6b?w=800&q=80');"></div>
+      <div class="sp-overlay"></div>
+    </div>
+
+    <div class="sp-card reveal">
+      <div class="sp-number">03</div>
+      <div class="sp-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+        </svg>
+      </div>
+      <h3 class="sp-title">Direct Trade</h3>
+      <p class="sp-body">Farmers receive 40% above commodity market rates. We fund schools, health clinics, and women's cooperatives across 14 tribal villages.</p>
+      <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?w=800&q=80');"></div>
+      <div class="sp-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS PREMIUM -->
+<section class="testi-premium">
+  <div class="tp-head reveal">
+    <div class="section-eyebrow" style="color:var(--gold); display:flex; justify-content:center; align-items:center;">
+      <span style="display:inline-block;width:30px;height:1px;background:var(--gold);margin-right:12px;"></span>
+      What our community says
+      <span style="display:inline-block;width:30px;height:1px;background:var(--gold);margin-left:12px;"></span>
+    </div>
+    <h2 class="tp-h2">Loved by <em>connoisseurs</em></h2>
+  </div>
+  
+  <div class="tp-grid">
+    <!-- Card 1 -->
+    <div class="tp-card reveal">
+      <div class="tp-quote-mark">“</div>
+      <div class="tp-stars">
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tp-q">I've tasted coffees from around the world — nothing compares to the depth and clarity of Araku's Grand Reserve. It has changed how I understand terroir.</p>
+      <div class="tp-author">
+        <div class="tp-av" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80');"></div>
+        <div>
+          <div class="tp-name">Rajan Pillai</div>
+          <div class="tp-role">Coffee Sommelier, Mumbai</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Card 2 -->
+    <div class="tp-card reveal">
+      <div class="tp-quote-mark">“</div>
+      <div class="tp-stars">
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tp-q">The honey process lot was a revelation. Stone fruit, forest flowers, and a finish that lingers like a memory. I've subscribed for three years and counting.</p>
+      <div class="tp-author">
+        <div class="tp-av" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80');"></div>
+        <div>
+          <div class="tp-name">Sana Mehta</div>
+          <div class="tp-role">Food Writer, Delhi</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Card 3 -->
+    <div class="tp-card reveal">
+      <div class="tp-quote-mark">“</div>
+      <div class="tp-stars">
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tp-q">Knowing that my morning ritual directly supports 10,000 farming families makes every sip more meaningful. Araku is what ethical consumption looks like.</p>
+      <div class="tp-author">
+        <div class="tp-av" style="background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80');"></div>
+        <div>
+          <div class="tp-name">Arjun Krishnan</div>
+          <div class="tp-role">Entrepreneur, Bangalore</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="nl-left">
+    <div class="nl-tag">Stay Connected</div>
+    <h2 class="nl-h2">Taste the<br><em>valley</em> first</h2>
+    <p class="nl-sub">Be first to know about new harvests, limited lots, and stories from the farms. No noise — only the good stuff.</p>
+  </div>
+  <div class="nl-right">
+    <div class="nl-offer">15<span style="font-size:32px;">%</span></div>
+    <div class="nl-offer-sub">off your first order when you subscribe</div>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="your@email.com">
+      <button class="nl-btn">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATIONS PREMIUM -->
+<section class="locations-premium" id="locations" style="padding: 100px 5%; background: var(--deep); position:relative; overflow:hidden;">
+  <div class="parallax-bg" data-speed="0.2" style="position:absolute; top:-20%; left:0; width:100%; height:140%; background:url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=1600&q=80') center/cover; opacity: 0.15; z-index:0;"></div>
+  <div class="lp-head reveal" style="text-align:center; margin-bottom: 60px; position:relative; z-index:1;">
+    <div class="section-eyebrow" style="color:var(--gold); display:flex; justify-content:center; align-items:center;">
+      <span style="display:inline-block;width:30px;height:1px;background:var(--gold);margin-right:12px;"></span>
+      Visit Us
+      <span style="display:inline-block;width:30px;height:1px;background:var(--gold);margin-left:12px;"></span>
+    </div>
+    <h2 class="lp-h2 gsap-stagger-text" style="font-family:'Cormorant Garamond',serif; font-size:48px; color:var(--ivory); font-weight:300;">Cafes & <em>Sanctuaries</em></h2>
+  </div>
+  
+  <div class="lp-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; position:relative; z-index:1;">
+    <div class="lp-card reveal glass-panel" style="padding: 40px; border-radius: 4px;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--gold); margin-bottom:10px;">Araku Valley Flagship</h3>
+      <p style="font-family:'Jost',sans-serif; color:var(--charcoal); font-size:15px; margin-bottom:20px; min-height: 45px;">Where it all begins. Experience our roastery and tasting room amidst the coffee forests.</p>
+      <div style="font-family:'Jost',sans-serif; font-size:14px; color:var(--terra); margin-bottom:20px;">
+        Mon - Sun: 8am - 6pm<br>
+        Araku Valley, AP 531149
+      </div>
+      <a href="#" class="btn-outline magnetic-btn" style="border-color:var(--gold); color:var(--gold); padding: 10px 20px; display:inline-block;">Get Directions</a>
+    </div>
+
+    <div class="lp-card reveal glass-panel" style="padding: 40px; border-radius: 4px;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--gold); margin-bottom:10px;">Paris Le Marais</h3>
+      <p style="font-family:'Jost',sans-serif; color:var(--charcoal); font-size:15px; margin-bottom:20px; min-height: 45px;">Our award-winning European sanctuary. Espresso bar, organic groceries, and events.</p>
+      <div style="font-family:'Jost',sans-serif; font-size:14px; color:var(--terra); margin-bottom:20px;">
+        Tue - Sun: 9am - 7pm<br>
+        14 Rue de Bretagne, 75003 Paris
+      </div>
+      <a href="#" class="btn-outline magnetic-btn" style="border-color:var(--gold); color:var(--gold); padding: 10px 20px; display:inline-block;">Get Directions</a>
+    </div>
+
+    <div class="lp-card reveal glass-panel" style="padding: 40px; border-radius: 4px;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--gold); margin-bottom:10px;">Bangalore Indiranagar</h3>
+      <p style="font-family:'Jost',sans-serif; color:var(--charcoal); font-size:15px; margin-bottom:20px; min-height: 45px;">A modern ode to Indian specialty coffee in the heart of the garden city.</p>
+      <div style="font-family:'Jost',sans-serif; font-size:14px; color:var(--terra); margin-bottom:20px;">
+        Mon - Sun: 7am - 11pm<br>
+        12th Main Rd, Indiranagar
+      </div>
+      <a href="#" class="btn-outline magnetic-btn" style="border-color:var(--gold); color:var(--gold); padding: 10px 20px; display:inline-block;">Get Directions</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer" class="footer" style="padding-bottom: 0;">
+  <div class="footer-top reveal">
+    <div class="footer-logo-block f-reveal">
+      <a href="#">ARAKU<span>.</span></a>
+      <p class="footer-tagline">"From the ancient forests of the Eastern Ghats — coffee that carries the soul of the land and the hands that tend it."</p>
+      <div class="footer-socials">
+        <a class="fsoc" href="#" aria-label="X (Twitter)">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117v.001z"/>
+          </svg>
+        </a>
+        <a class="fsoc" href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
+          </svg>
+        </a>
+        <a class="fsoc" href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="f-reveal">
+      <div class="footer-col-head">Shop</div>
+      <ul class="footer-list">
+        <li><a href="#">Whole Bean</a></li>
+        <li><a href="#">Ground Coffee</a></li>
+        <li><a href="#">Cold Brew</a></li>
+        <li><a href="#">Subscriptions</a></li>
+      </ul>
+    </div>
+    <div class="f-reveal">
+      <div class="footer-col-head">Company</div>
+      <ul class="footer-list">
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">The Farmers</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="f-reveal">
+      <div class="footer-col-head">Contact</div>
+      <div style="font-size:12px;font-weight:300;color:rgba(245,240,232,0.4);line-height:1.9;">
+        hello@araku.coffee<br>
+        +91 98765 43210<br>
+        Araku Valley, AP
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-mega reveal">
+    <span>A</span><span>R</span><span>A</span><span>K</span><span>U</span>
+  </div>
+  
+  <div class="footer-bottom f-reveal reveal" style="border-top: none; padding-top: 10px;">
+    <div class="footer-copy">© 2026 Araku Valley Coffee. All rights reserved.</div>
+    <div class="footer-cert">
+      <span class="cert-item">Rainforest Alliance</span>
+      <span class="cert-item">Direct Trade</span>
+      <span class="cert-item">Organic Certified</span>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TO TOP -->
+<button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+<script type="module" src="/src/main.js"></script>
+<script type="module" src="/src/cart.js"></script>
+</body>
+</html>
