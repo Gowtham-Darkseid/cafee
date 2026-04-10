@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Araku — Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body style="background: var(--ivory);">
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav id="main-nav" style="background:var(--deep); border-bottom:1px solid rgba(245,240,232,0.1);">
+  <a href="index.html" class="nav-logo">ARAKU<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="index.html#origin">Our Story</a></li>
+    <li><a href="index.html#process">Process</a></li>
+    <li><a href="index.html#journal">Journal</a></li>
+    <li><a href="#footer">Locate Us</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-shop" style="text-decoration:none;">Shop Coffee</a>
+    <div class="nav-cart" id="open-cart">
+      Cart
+      <span class="cart-count">0</span>
+    </div>
+    <div class="nav-ham" style="margin-left: 20px;">
+      <span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- SHOP HERO -->
+<section class="shop-hero">
+  <h1>Our <em>Collections</em></h1>
+  <p>Discover the distinct terroirs of Araku Valley. Responsibly grown, expertly harvested, and roasted to perfection. Find your signature cup.</p>
+</section>
+
+<!-- SHOP GRID -->
+<section class="shop-layout">
+  <div class="shop-grid" id="product-grid">
+    <!-- Populated by JS mock or hardcoded HTML -->
+    
+    <div class="shop-prd">
+      <div class="shop-prd-img" style="background-image:url('https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=600&q=80')">
+        <div class="shop-prd-hover">
+          <button class="shop-add" onclick="window.addToCart('grand-reserve')">Add to Cart</button>
+        </div>
+      </div>
+      <h3>Grand Reserve</h3>
+      <p>Notes of dark cocoa and berries. Our most sought-after lot.</p>
+      <div class="shop-prd-price">₹2,100</div>
+    </div>
+    
+    <div class="shop-prd">
+      <div class="shop-prd-img" style="background-image:url('https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&q=80')">
+        <div class="shop-prd-hover">
+          <button class="shop-add" onclick="window.addToCart('signature')">Add to Cart</button>
+        </div>
+      </div>
+      <h3>Signature Blend</h3>
+      <p>Balanced with caramel sweetness and a rounded mouthfeel.</p>
+      <div class="shop-prd-price">₹1,500</div>
+    </div>
+
+    <div class="shop-prd">
+      <div class="shop-prd-img" style="background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80')">
+        <div class="shop-prd-hover">
+          <button class="shop-add" onclick="window.addToCart('micro-climate')">Add to Cart</button>
+        </div>
+      </div>
+      <h3>Micro Climate</h3>
+      <p>Bright, fruity, honey process from the highest elevations.</p>
+      <div class="shop-prd-price">₹1,900</div>
+    </div>
+
+    <div class="shop-prd">
+      <div class="shop-prd-img" style="background-image:url('https://images.unsplash.com/photo-1518832553480-161bb7469796?w=600&q=80')">
+        <div class="shop-prd-hover">
+          <button class="shop-add" onclick="window.addToCart('selection')">Add to Cart</button>
+        </div>
+      </div>
+      <h3>Early Selection</h3>
+      <p>Light roast, highly aromatic. Best enjoyed black.</p>
+      <div class="shop-prd-price">₹1,700</div>
+    </div>
+    
+    <div class="shop-prd">
+      <div class="shop-prd-img" style="background-image:url('https://images.unsplash.com/photo-1498603536246-15572faa67a6?w=600&q=80')">
+        <div class="shop-prd-hover">
+          <button class="shop-add" onclick="window.addToCart('sampler')">Add to Cart</button>
+        </div>
+      </div>
+      <h3>Explorer Sampler</h3>
+      <p>Four 100g bags of our finest micro-lots. Perfect for gifting.</p>
+      <div class="shop-prd-price">₹3,000</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer" class="footer" style="margin-top:0;">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h2>araku</h2>
+      <p>Redefining specialty coffee through deep ecology, direct impact, and uncompromising quality.</p>
+      <div class="footer-socials">
+        <a class="fsoc" href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-head">Shop</div>
+      <ul class="footer-list">
+        <li><a href="shop.html">Whole Bean</a></li>
+        <li><a href="shop.html">Ground Coffee</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">Company</div>
+      <ul class="footer-list">
+        <li><a href="index.html#origin">Our Story</a></li>
+        <li><a href="index.html#process">The Farmers</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">Discover</div>
+      <ul class="footer-list">
+        <li><a href="index.html#journal">Journal</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">Hours</div>
+      <div class="footer-hours">
+        <div class="fh-row"><span class="fh-day">Mon – Fri</span><span>7:00 – 22:00</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Araku Valley Coffee.</div>
+  </div>
+</footer>
+
+<button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script type="module" src="/src/main.js"></script>
+<script type="module" src="/src/cart.js"></script>
+</body>
+</html>

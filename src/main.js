@@ -1,5 +1,17 @@
 import './style.css'
 
+/* ─── Preloader ─── */
+document.addEventListener('DOMContentLoaded', () => {
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    // Wait for the inner animation to finish (approx 2.4s) before triggering the curtain slide out
+    setTimeout(() => {
+      preloader.classList.add('loaded');
+      // Completely remove from DOM after the clip-path transition is over to allow scrolling
+      setTimeout(() => preloader.remove(), 1200);
+    }, 2400); 
+  }
+});
 /* ─── Cursor ─── */
 const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {

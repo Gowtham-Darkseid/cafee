@@ -8,6 +8,18 @@
 </head>
 <body>
 
+<!-- PRELOADER -->
+<div id="preloader" class="preloader">
+  <div class="preloader-overlay"></div>
+  <div class="preloader-content">
+    <div class="preloader-logo-wrap">
+      <span class="preloader-logo">ARAKU</span>
+    </div>
+    <div class="preloader-line"><div class="preloader-line-inner"></div></div>
+    <div class="preloader-kicker">Cultivating in the Eastern Ghats</div>
+  </div>
+</div>
+
 <div class="cursor" id="cursor"></div>
 
 <!-- INTRO SEQUENCE (scroll-driven frame animation) -->
@@ -28,15 +40,19 @@
 <nav id="main-nav">
   <a href="#" class="nav-logo">ARAKU<span>.</span></a>
   <ul class="nav-links">
-    <li><a href="#products">Shop</a></li>
+    <li><a href="shop.html">Shop</a></li>
     <li><a href="#origin">Our Story</a></li>
     <li><a href="#process">Process</a></li>
     <li><a href="#journal">Journal</a></li>
     <li><a href="#footer">Locate Us</a></li>
   </ul>
   <div class="nav-right">
-    <button class="nav-shop">Shop Coffee</button>
-    <div class="nav-ham">
+    <a href="shop.html" class="nav-shop" style="text-decoration:none;">Shop Coffee</a>
+    <div class="nav-cart" id="open-cart">
+      Cart
+      <span class="cart-count">0</span>
+    </div>
+    <div class="nav-ham" style="margin-left: 20px;">
       <span></span><span></span>
     </div>
   </div>
@@ -383,46 +399,74 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section class="testi">
-  <div class="testi-head">
-    <div class="section-eyebrow" style="color:var(--terra);justify-content:center;">
-      <span style="display:inline-block;width:16px;height:1px;background:var(--terra);margin-right:10px;"></span>
+<!-- TESTIMONIALS PREMIUM -->
+<section class="testi-premium">
+  <div class="tp-head reveal">
+    <div class="section-eyebrow" style="color:var(--gold); display:flex; justify-content:center; align-items:center;">
+      <span style="display:inline-block;width:30px;height:1px;background:var(--gold);margin-right:12px;"></span>
       What our community says
+      <span style="display:inline-block;width:30px;height:1px;background:var(--gold);margin-left:12px;"></span>
     </div>
-    <h2 class="testi-h2">Loved by <em>connoisseurs</em></h2>
+    <h2 class="tp-h2">Loved by <em>connoisseurs</em></h2>
   </div>
-  <div class="testi-row">
-    <div class="testi-card reveal">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-q">"I've tasted coffees from around the world — nothing compares to the depth and clarity of Araku's Grand Reserve. It has changed how I understand terroir."</p>
-      <div class="testi-author">
-        <div class="testi-av">RP</div>
+  
+  <div class="tp-grid">
+    <!-- Card 1 -->
+    <div class="tp-card reveal">
+      <div class="tp-quote-mark">“</div>
+      <div class="tp-stars">
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tp-q">I've tasted coffees from around the world — nothing compares to the depth and clarity of Araku's Grand Reserve. It has changed how I understand terroir.</p>
+      <div class="tp-author">
+        <div class="tp-av" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80');"></div>
         <div>
-          <div class="testi-name">Rajan Pillai</div>
-          <div class="testi-role">Coffee Sommelier, Mumbai</div>
+          <div class="tp-name">Rajan Pillai</div>
+          <div class="tp-role">Coffee Sommelier, Mumbai</div>
         </div>
       </div>
     </div>
-    <div class="testi-card reveal">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-q">"The honey process lot was a revelation. Stone fruit, forest flowers, and a finish that lingers like a memory. I've subscribed for three years and counting."</p>
-      <div class="testi-author">
-        <div class="testi-av">SM</div>
+    
+    <!-- Card 2 -->
+    <div class="tp-card reveal">
+      <div class="tp-quote-mark">“</div>
+      <div class="tp-stars">
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tp-q">The honey process lot was a revelation. Stone fruit, forest flowers, and a finish that lingers like a memory. I've subscribed for three years and counting.</p>
+      <div class="tp-author">
+        <div class="tp-av" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80');"></div>
         <div>
-          <div class="testi-name">Sana Mehta</div>
-          <div class="testi-role">Food Writer, Delhi</div>
+          <div class="tp-name">Sana Mehta</div>
+          <div class="tp-role">Food Writer, Delhi</div>
         </div>
       </div>
     </div>
-    <div class="testi-card reveal">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-q">"Knowing that my morning ritual directly supports 10,000 farming families makes every sip more meaningful. Araku is what ethical consumption looks like."</p>
-      <div class="testi-author">
-        <div class="testi-av">AK</div>
+    
+    <!-- Card 3 -->
+    <div class="tp-card reveal">
+      <div class="tp-quote-mark">“</div>
+      <div class="tp-stars">
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="tp-q">Knowing that my morning ritual directly supports 10,000 farming families makes every sip more meaningful. Araku is what ethical consumption looks like.</p>
+      <div class="tp-author">
+        <div class="tp-av" style="background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80');"></div>
         <div>
-          <div class="testi-name">Arjun Krishnan</div>
-          <div class="testi-role">Entrepreneur, Bangalore</div>
+          <div class="tp-name">Arjun Krishnan</div>
+          <div class="tp-role">Entrepreneur, Bangalore</div>
         </div>
       </div>
     </div>
@@ -543,5 +587,6 @@
 </button>
 
 <script type="module" src="/src/main.js"></script>
+<script type="module" src="/src/cart.js"></script>
 </body>
 </html>
