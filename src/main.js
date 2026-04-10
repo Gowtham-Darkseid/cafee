@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2400); 
   }
 });
+
 /* ─── Cursor ─── */
 const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
@@ -194,6 +195,187 @@ if (scrollToTopBtn) {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
+    });
+  });
+}
+
+/* ─── TABLE BOOKING LOGIC ─── */
+window.selectTable = function(tableId) {
+  const allTables = document.querySelectorAll('.f-table');
+  const target = document.getElementById(tableId);
+
+  // Ignore if booked
+  if (!target || target.classList.contains('booked')) return;
+
+  // Deselect others
+  allTables.forEach(t => t.classList.remove('selected'));
+  
+  // Select clicked
+  target.classList.add('selected');
+
+  // Update UI Panel
+  const tableName = target.getAttribute('data-table');
+  const title = document.getElementById('bp-title');
+  const desc = document.getElementById('bp-desc');
+  const form = document.getElementById('bp-form');
+  const empty = document.getElementById('bp-empty');
+  const success = document.getElementById('bp-success');
+
+  if (title) title.textContent = 'Booking: ' + tableName;
+  if (desc) desc.style.display = 'block';
+  if (empty) empty.style.display = 'none';
+  if (success) success.style.display = 'none';
+  if (form) form.style.display = 'block';
+};
+
+window.confirmBooking = function(event) {
+  event.preventDefault();
+  
+  const submitBtn = document.getElementById('bp-btn-submit');
+  if (!submitBtn) return;
+  const originalText = submitBtn.textContent;
+  
+  submitBtn.textContent = 'Processing...';
+  submitBtn.style.opacity = '0.6';
+
+  setTimeout(() => {
+    submitBtn.textContent = originalText;
+    submitBtn.style.opacity = '1';
+
+    // Show Success, Hide Form
+    const form = document.getElementById('bp-form');
+    const desc = document.getElementById('bp-desc');
+    const title = document.getElementById('bp-title');
+    const success = document.getElementById('bp-success');
+
+    if (form) form.style.display = 'none';
+    if (desc) desc.style.display = 'none';
+    if (title) title.textContent = 'Confirmed!';
+    if (success) success.style.display = 'block';
+    
+    // Mark table as booked visually
+    const selected = document.querySelector('.f-table.selected');
+    if (selected) {
+      selected.classList.remove('selected');
+      selected.classList.add('booked');
+      selected.onclick = null; 
+      
+      const prevData = selected.getAttribute('data-table');
+      selected.setAttribute('data-table', prevData + ' (Booked)');
+    }
+  }, 1200);
+};
+
+/* ─── GSAP SCROLL & PARALLAX LOGIC ─── */
+if (typeof gsap !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Parallax Backgrounds
+  document.querySelectorAll('.parallax-bg').forEach(bg => {
+    const speed = bg.getAttribute('data-speed') || 0.5;
+    gsap.to(bg, {
+      y: () => (document.documentElement.scrollHeight - window.innerHeight) * speed * 0.1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: bg.closest('.parallax-container') || bg.parentElement,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+  });
+
+  // GSAP Reveal Animations
+  gsap.utils.toArray('.gsap-fade').forEach(elem => {
+    gsap.fromTo(elem, 
+      { autoAlpha: 0, y: 30 }, 
+      { autoAlpha: 1, y: 0, duration: 1.2, ease: "power3.out",
+        scrollTrigger: {
+          trigger: elem,
+          start: "top 85%",
+        }
+      }
+    );
+  });
+  
+  gsap.utils.toArray('.gsap-reveal').forEach(elem => {
+    gsap.fromTo(elem, 
+      { autoAlpha: 0, y: 50 }, 
+      { autoAlpha: 1, y: 0, duration: 1.5, ease: "expo.out",
+        scrollTrigger: {
+          trigger: elem,
+          start: "top 90%",
+        }
+      }
+    );
+  });
+
+  // Staggered reveals
+  gsap.utils.toArray('.menu-category, .lp-grid').forEach(container => {
+    const items = container.querySelectorAll('.gsap-stagger, .lp-card');
+    if (items.length > 0) {
+      gsap.fromTo(items,
+        { autoAlpha: 0, y: 40 },
+        { autoAlpha: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out",
+          scrollTrigger: {
+            trigger: container,
+            start: "top 85%"
+          }
+        }
+      );
+    }
+  });
+
+  // Split text reveal fallback (basic word splitting)
+  document.querySelectorAll('.gsap-stagger-text').forEach(elem => {
+    gsap.set(elem, { autoAlpha: 1 });
+    const text = elem.innerText;
+    elem.innerHTML = text.split(' ').map(word => `<span style="display:inline-block; overflow:hidden; vertical-align:top;"><span style="display:inline-block;" class="stagger-word">${word}</span></span>`).join(' ');
+    
+    gsap.fromTo(elem.querySelectorAll('.stagger-word'),
+      { yPercent: 100 },
+      { yPercent: 0, duration: 1, stagger: 0.1, ease: "power4.out",
+        scrollTrigger: {
+          trigger: elem,
+          start: "top 80%"
+        }
+      }
+    );
+  });
+
+  /* ─── MAGNETIC BUTTONS ─── */
+  const magneticBtns = document.querySelectorAll('.magnetic-btn');
+  magneticBtns.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      gsap.to(btn, { x: x * 0.4, y: y * 0.4, duration: 0.5, ease: "power3.out" });
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)" });
+    });
+  });
+
+  /* Update custom cursor size on magnetic hover */
+  magneticBtns.forEach(el => {
+    el.addEventListener('mouseenter', () => { 
+      const cursor = document.getElementById('cursor');
+      if (cursor) { 
+        cursor.style.transform = 'translate(-50%, -50%) scale(3)'; 
+        cursor.style.background = 'transparent'; 
+        cursor.style.border = '1px solid var(--gold)'; 
+      } 
+    });
+    el.addEventListener('mouseleave', () => { 
+      const cursor = document.getElementById('cursor');
+      if (cursor) { 
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)'; 
+        cursor.style.background = 'var(--gold)'; 
+        cursor.style.border = 'none'; 
+      } 
     });
   });
 }
