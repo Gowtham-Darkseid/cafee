@@ -14,7 +14,6 @@
 <nav id="main-nav" style="background:var(--deep); border-bottom:1px solid rgba(245,240,232,0.1);">
   <a href="index.html" class="nav-logo">ARAKU<span>.</span></a>
   <ul class="nav-links">
-    <li><a href="shop.html">Shop</a></li>
     <li><a href="index.html#origin">Our Story</a></li>
     <li><a href="index.html#process">Process</a></li>
     <li><a href="index.html#journal">Journal</a></li>
@@ -22,8 +21,12 @@
   </ul>
   <div class="nav-right">
     <a href="shop.html" class="nav-shop" style="text-decoration:none;">Shop Coffee</a>
-    <div class="nav-cart" id="open-cart">
-      Cart
+    <div class="nav-cart" id="open-cart" title="View Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
       <span class="cart-count">0</span>
     </div>
     <div class="nav-ham" style="margin-left: 20px;">
@@ -102,11 +105,11 @@
 </section>
 
 <!-- FOOTER -->
-<footer id="footer" class="footer" style="margin-top:0;">
-  <div class="footer-top">
-    <div class="footer-brand">
-      <h2>araku</h2>
-      <p>Redefining specialty coffee through deep ecology, direct impact, and uncompromising quality.</p>
+<footer id="footer" class="footer" style="padding-bottom: 0; margin-top: 0;">
+  <div class="footer-top reveal">
+    <div class="footer-logo-block f-reveal">
+      <a href="index.html">ARAKU<span>.</span></a>
+      <p class="footer-tagline">"From the ancient forests of the Eastern Ghats — coffee that carries the soul of the land and the hands that tend it."</p>
       <div class="footer-socials">
         <a class="fsoc" href="#" aria-label="Instagram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -117,35 +120,38 @@
         </a>
       </div>
     </div>
-    <div>
+    <div class="f-reveal">
       <div class="footer-col-head">Shop</div>
       <ul class="footer-list">
         <li><a href="shop.html">Whole Bean</a></li>
         <li><a href="shop.html">Ground Coffee</a></li>
       </ul>
     </div>
-    <div>
+    <div class="f-reveal">
       <div class="footer-col-head">Company</div>
       <ul class="footer-list">
         <li><a href="index.html#origin">Our Story</a></li>
         <li><a href="index.html#process">The Farmers</a></li>
       </ul>
     </div>
-    <div>
-      <div class="footer-col-head">Discover</div>
-      <ul class="footer-list">
-        <li><a href="index.html#journal">Journal</a></li>
-      </ul>
-    </div>
-    <div>
+    <div class="f-reveal">
       <div class="footer-col-head">Hours</div>
       <div class="footer-hours">
         <div class="fh-row"><span class="fh-day">Mon – Fri</span><span>7:00 – 22:00</span></div>
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
+  
+  <div class="footer-mega reveal">
+    <span>A</span><span>R</span><span>A</span><span>K</span><span>U</span>
+  </div>
+  
+  <div class="footer-bottom f-reveal reveal" style="border-top: none; padding-top: 10px;">
     <div class="footer-copy">© 2026 Araku Valley Coffee.</div>
+    <div class="footer-cert">
+      <span class="cert-item">Rainforest Alliance</span>
+      <span class="cert-item">Direct Trade</span>
+    </div>
   </div>
 </footer>
 

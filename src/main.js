@@ -29,9 +29,13 @@ document.querySelectorAll('a, button').forEach(el => {
 const reveals = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
-    if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    } else {
+      entry.target.classList.remove('visible');
+    }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0 });
 reveals.forEach(el => io.observe(el));
 
 /* ─── Product tabs ─── */
