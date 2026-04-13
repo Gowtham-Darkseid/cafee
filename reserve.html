@@ -29,18 +29,9 @@
       <li><a href="index.html#origin">Our Story</a></li>
       <li><a href="menu.html">Menu</a></li>
       <li><a href="index.html#journal">Journal</a></li>
-      <li><a href="index.html#locations">Locate Us</a></li>
     </ul>
     <div class="nav-right">
-      <a href="reserve.html" style="text-decoration:none; margin-right: 20px; color: var(--cream); display:flex; align-items:center;" title="Book a Table">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-      </a>
-      <a href="shop.html" class="nav-shop" style="text-decoration:none;">Shop Coffee</a>
+      <a href="reserve.html" class="nav-book-btn">Book a Table</a>
       <div class="nav-cart" id="open-cart" title="View Cart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
           stroke-linejoin="round" style="width:20px; height:20px;">
@@ -50,8 +41,6 @@
         </svg>
         <span class="cart-count">0</span>
       </div>
-      <div class="nav-ham" style="margin-left: 20px;">
-        <span></span><span></span>
       </div>
     </div>
   </nav>
@@ -123,55 +112,145 @@
         <!-- Floor Layout Decorations -->
         <div class="floor-decor" style="top: 82%; left: 85%;">🪴</div>
         <div class="floor-decor" style="top: 10%; left: 88%;">☕</div>
+      </div> <!-- Closes floor-plan -->
+
+      <!-- Intermediate Selection Card -->
+      <div id="selection-card" class="selection-card">
+        <div class="sc-info">
+          <span class="sc-label">Selected Table</span>
+          <h4 id="sc-table-name">Window Seat</h4>
+        </div>
+        <button class="sc-confirm-btn" onclick="window.confirmTableSelection()">Confirm Table</button>
       </div>
+    </div> <!-- Closes booking-container -->
+  </section>
 
-      <div class="booking-panel" id="booking-panel">
-        <div class="bp-inner">
-          <h3 id="bp-title">Select a Table</h3>
-          <p id="bp-desc" style="display:none; color: rgba(245,240,232,0.6); font-size:14px; margin-bottom: 20px;">Pick
-            a date & time for your reservation.</p>
-
-          <form id="bp-form" style="display:none;" onsubmit="window.confirmBooking(event)">
-            <div class="bp-field">
-              <label>Date</label>
-              <input type="date" required id="bp-date" />
-            </div>
-            <div class="bp-field">
-              <label>Time</label>
-              <select required id="bp-time">
-                <option value="">Select Time</option>
-                <option value="10:00">10:00 AM</option>
-                <option value="12:00">12:00 PM</option>
-                <option value="14:00">2:00 PM</option>
-                <option value="16:00">4:00 PM</option>
-              </select>
-            </div>
-            <button class="bp-btn" type="submit" id="bp-btn-submit">Confirm Reservation</button>
-          </form>
-
-          <!-- Empty State Prompt -->
-          <div id="bp-empty" style="text-align:center; padding: 40px 0; opacity: 0.4;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40"
-              style="margin-bottom:16px;">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <path d="M3 9h18M9 21V9"></path>
-            </svg>
-            <p style="font-size:10px; text-transform:uppercase; letter-spacing:0.2em;">Click a highlighted table</p>
-          </div>
-
-          <!-- Success State -->
-          <div id="bp-success" style="display:none; text-align:center; padding: 30px 0;">
-            <div style="font-size: 56px; color: #10b981; margin-bottom: 12px; line-height: 1;">✓</div>
-            <h4
-              style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--gold); margin-bottom: 8px;">
-              Table Confirmed</h4>
-            <p style="font-size: 13px; color: rgba(245,240,232,0.6);">Your Araku experience awaits.</p>
-          </div>
-
+  <!-- MULTI-STEP BOOKING MODAL -->
+  <div class="booking-modal" id="booking-modal">
+    <div class="bk-box">
+      <div class="bk-header">
+        <h3 id="bk-title" style="font-family:'Cormorant Garamond', serif; font-size:24px; color:var(--gold);">Reserve Table</h3>
+        <span class="bk-close" onclick="window.closeBookingModal()">&times;</span>
+      </div>
+      
+      <div class="bk-steps">
+        <div class="bk-step active" id="step-dot-1">
+          <span class="bk-step-num">1</span>
+          <span>Details</span>
+        </div>
+        <div class="bk-step" id="step-dot-2">
+          <span class="bk-step-num">2</span>
+          <span>Pre-order</span>
+        </div>
+        <div class="bk-step" id="step-dot-3">
+          <span class="bk-step-num">3</span>
+          <span>Payment</span>
         </div>
       </div>
+
+      <div class="bk-content">
+        <!-- Step 1: User info -->
+        <div id="bk-step-1">
+          <div class="bk-form-grid">
+            <div class="bk-field full">
+              <label>Full Name</label>
+              <input type="text" id="bk-name" placeholder="E.g. Rohan Sharma" required>
+            </div>
+            <div class="bk-field">
+              <label>Phone Number</label>
+              <input type="tel" id="bk-phone" placeholder="+91 00000 00000" required>
+            </div>
+            <div class="bk-field">
+              <label>Email ID</label>
+              <input type="email" id="bk-email" placeholder="rohan@example.com" required>
+            </div>
+            <div class="bk-field">
+              <label>Date</label>
+              <input type="date" id="bk-date" required>
+            </div>
+            <div class="bk-field">
+              <label>Guest Count</label>
+              <select id="bk-guests">
+                <option value="1">1 Person</option>
+                <option value="2">2 People</option>
+                <option value="4">4 People</option>
+                <option value="6">6 People</option>
+              </select>
+            </div>
+            <div class="bk-field">
+              <label>In Time</label>
+              <input type="time" id="bk-time-in" required>
+            </div>
+            <div class="bk-field">
+              <label>Out Time</label>
+              <input type="time" id="bk-time-out" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Pre-order -->
+        <div id="bk-step-2" class="hidden-step">
+          <h4 style="font-family:'Cormorant Garamond', serif; font-size:20px; color:var(--gold); margin-bottom:8px;">Enhance your experience</h4>
+          <p style="font-size:13px; color:rgba(245,240,232,0.6);">Would you like to pre-order your coffee and snacks so they're ready when you arrive?</p>
+          
+          <div class="bk-preorder-list" id="bk-preorder-list">
+            <!-- Populated by JS -->
+          </div>
+          
+          <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+            <span style="font-size:12px; opacity:0.6;">Pre-order Total:</span>
+            <span id="bk-preorder-total" style="color:var(--gold); font-weight:500;">₹0</span>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment/Confirm -->
+        <div id="bk-step-3" class="hidden-step">
+          <div id="bk-payment-required" style="display:none;">
+            <h4 style="font-family:'Cormorant Garamond', serif; font-size:20px; color:var(--gold); margin-bottom:16px;">Secure Pre-payment</h4>
+            <div class="bk-field full" style="margin-bottom:16px;">
+              <label>Payment Method</label>
+              <select id="bk-payment-method">
+                <option value="upi">UPI / GPay / PhonePe</option>
+                <option value="card">Credit / Debit Card</option>
+              </select>
+            </div>
+            <p style="font-size:11px; color:rgba(245,240,232,0.4); text-align:center;">Secure payment powered by Araku Pay Gateway.</p>
+          </div>
+          
+          <div id="bk-no-preorder" style="text-align:center; padding:20px 0;">
+            <div style="font-size:40px; margin-bottom:16px;">✨</div>
+            <h4 style="font-family:'Cormorant Garamond', serif; font-size:20px; color:var(--gold);">Ready to Confirm</h4>
+            <p style="font-size:13px; color:rgba(245,240,232,0.6);">We've saved your table. One last click to finalize.</p>
+          </div>
+
+          <!-- Final Selection Summary -->
+          <div id="bk-summary" style="margin-top:20px; padding:16px; background:rgba(221,192,115,0.05); border:1px solid rgba(221,192,115,0.1);">
+            <div style="display:flex; justify-content:space-between; font-size:11px; text-transform:uppercase; opacity:0.6; margin-bottom:8px;">
+              <span>Table</span>
+              <span id="sum-table">Window Seat</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11px; text-transform:uppercase; opacity:0.6;">
+              <span>Timing</span>
+              <span id="sum-time">-- : --</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Success -->
+        <div id="bk-step-success" class="hidden-step" style="text-align:center; padding:40px 0;">
+          <div style="width:64px; height:64px; background:var(--gold); color:var(--deep); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 24px; font-size:32px;">✓</div>
+          <h3 style="font-family:'Cormorant Garamond', serif; font-size:28px; color:var(--gold); margin-bottom:12px;">Booking Synced</h3>
+          <p style="font-size:14px; color:rgba(245,240,232,0.6); line-height:1.6;">Confirmation details have been sent to your WhatsApp and Email ID.</p>
+          <button class="bk-btn-next" style="margin-top:32px; width:100%;" onclick="window.closeBookingModal()">Done</button>
+        </div>
+      </div>
+
+      <div class="bk-footer" id="bk-footer-area">
+        <button id="bk-btn-back" style="background:transparent; border:none; color:rgba(245,240,232,0.4); text-transform:uppercase; font-size:10px; cursor:pointer;" onclick="window.bkPrevStep()">Back</button>
+        <button class="bk-btn-next" id="bk-btn-next" onclick="window.bkNextStep()">Next</button>
+      </div>
     </div>
-  </section>
+  </div>
 
   <!-- FOOTER -->
   <footer id="footer" class="footer" style="padding-bottom: 0; margin-top: 0;">
@@ -205,16 +284,14 @@
           <li><a href="shop.html">Whole Bean</a></li>
           <li><a href="shop.html">Ground Coffee</a></li>
           <li><a href="shop.html">Cold Brew</a></li>
-          <li><a href="shop.html">Subscriptions</a></li>
         </ul>
       </div>
       <div class="f-reveal">
         <div class="footer-col-head">Company</div>
         <ul class="footer-list">
           <li><a href="index.html#origin">Our Story</a></li>
-          <li><a href="index.html#process">The Farmers</a></li>
-          <li><a href="index.html#process">Sustainability</a></li>
-          <li><a href="#">Careers</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="index.html#journal">Journal</a></li>
         </ul>
       </div>
       <div class="f-reveal">
@@ -227,6 +304,22 @@
       </div>
     </div>
     
+    <div class="footer-map-section reveal">
+      <div class="footer-map-wrap">
+        <div class="footer-map-label">
+          <div class="fml-eyebrow">The Roastery</div>
+          <div class="fml-name">Araku Valley, India</div>
+        </div>
+        <iframe 
+          class="footer-map-iframe"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.2312!2d82.8524!3d18.3284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a3a79f18a54366b%3A0xc3b5e4062464736f!2sAraku%20Valley%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
     <div class="footer-mega reveal">
       <span>A</span><span>R</span><span>A</span><span>K</span><span>U</span>
     </div>
@@ -247,5 +340,140 @@
 
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/cart.js"></script>
+
+  <script>
+    // ─── BOOKING LOGIC ─── //
+    let currentStep = 1;
+    let selectedTable = null;
+    let preorders = [];
+    const MENU = [
+      { id: 'm1', name: 'Grand Reserve Espresso', price: 210, img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=100' },
+      { id: 'm2', name: 'Saffron Latte', price: 340, img: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=100' },
+      { id: 'm3', name: 'Traditional Idli Sliders', price: 280, img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=100' },
+      { id: 'm4', name: 'Almond Croissant', price: 220, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=100' }
+    ];
+
+    window.selectTable = function(id) {
+      // Remove previous selection class
+      document.querySelectorAll('.f-table').forEach(t => t.classList.remove('selected'));
+      
+      const table = document.getElementById(id);
+      if (table.classList.contains('booked')) return;
+      
+      table.classList.add('selected');
+      selectedTable = table.getAttribute('data-table');
+      
+      // Show intermediate selection card
+      document.getElementById('sc-table-name').textContent = selectedTable;
+      document.getElementById('selection-card').classList.add('visible');
+    }
+
+    window.confirmTableSelection = function() {
+      if (!selectedTable) return;
+      document.getElementById('sum-table').textContent = selectedTable;
+      document.getElementById('booking-modal').classList.add('visible');
+      document.getElementById('selection-card').classList.remove('visible');
+      window.bkGoToStep(1);
+    }
+
+    window.closeBookingModal = function() {
+      document.getElementById('booking-modal').classList.remove('visible');
+    }
+
+    window.bkGoToStep = function(step) {
+      currentStep = step;
+      document.getElementById('bk-step-1').classList.toggle('hidden-step', step !== 1);
+      document.getElementById('bk-step-2').classList.toggle('hidden-step', step !== 2);
+      document.getElementById('bk-step-3').classList.toggle('hidden-step', step !== 3);
+      document.getElementById('bk-step-success').classList.toggle('hidden-step', step !== 4);
+
+      document.getElementById('step-dot-1').classList.toggle('active', step >= 1);
+      document.getElementById('step-dot-2').classList.toggle('active', step >= 2);
+      document.getElementById('step-dot-3').classList.toggle('active', step >= 3);
+
+      document.getElementById('bk-footer-area').style.display = step === 4 ? 'none' : 'flex';
+      document.getElementById('bk-btn-back').style.visibility = step === 1 ? 'hidden' : 'visible';
+      document.getElementById('bk-btn-next').textContent = step === 3 ? 'Confirm & Secure' : 'Next';
+
+      if (step === 2) renderPreorderMenu();
+      if (step === 3) updateSummary();
+    }
+
+    window.bkNextStep = function() {
+      if (currentStep === 1) {
+        if (!document.getElementById('bk-name').value || !document.getElementById('bk-phone').value) {
+          alert('Please provide contact details.'); return;
+        }
+        window.bkGoToStep(2);
+      } else if (currentStep === 2) {
+        window.bkGoToStep(3);
+      } else if (currentStep === 3) {
+        window.bkConfirmFinal();
+      }
+    }
+
+    window.bkPrevStep = function() {
+      if (currentStep > 1) window.bkGoToStep(currentStep - 1);
+    }
+
+    function renderPreorderMenu() {
+      const list = document.getElementById('bk-preorder-list');
+      list.innerHTML = MENU.map(item => `
+        <div class="bk-menu-item">
+          <div class="bk-menu-img" style="background-image:url('${item.img}')"></div>
+          <div class="bk-menu-info">
+            <h4>${item.name}</h4>
+            <p>Cafe Specialty</p>
+          </div>
+          <div class="bk-menu-price">₹${item.price}</div>
+          <button class="bk-menu-add ${preorders.includes(item.id) ? 'selected' : ''}" onclick="window.togglePreorder('${item.id}')">
+            ${preorders.includes(item.id) ? 'Added' : 'Add'}
+          </button>
+        </div>
+      `).join('');
+    }
+
+    window.togglePreorder = function(id) {
+      if (preorders.includes(id)) {
+        preorders = preorders.filter(item => item !== id);
+      } else {
+        preorders.push(id);
+      }
+      renderPreorderMenu();
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const total = preorders.reduce((sum, id) => {
+        const item = MENU.find(m => m.id === id);
+        return sum + item.price;
+      }, 0);
+      document.getElementById('bk-preorder-total').textContent = '₹' + total;
+    }
+
+    function updateSummary() {
+      const total = preorders.reduce((sum, id) => {
+        const item = MENU.find(m => m.id === id);
+        return sum + item.price;
+      }, 0);
+
+      document.getElementById('bk-payment-required').style.display = total > 0 ? 'block' : 'none';
+      document.getElementById('bk-no-preorder').style.display = total > 0 ? 'none' : 'block';
+      
+      const timeIn = document.getElementById('bk-time-in').value || '--:--';
+      const timeOut = document.getElementById('bk-time-out').value || '--:--';
+      document.getElementById('sum-time').textContent = `${timeIn} to ${timeOut}`;
+    }
+
+    window.bkConfirmFinal = function() {
+      const btn = document.getElementById('bk-btn-next');
+      btn.textContent = 'Syncing...';
+      btn.style.opacity = '0.7';
+      
+      setTimeout(() => {
+        window.bkGoToStep(4);
+      }, 2000);
+    }
+  </script>
 </body>
 </html>

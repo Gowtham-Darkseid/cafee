@@ -2,10 +2,15 @@ import './style.css'
 
 // ─── CART STATE ─── //
 const CATALOG = [
-  { id: 'p1', name: 'Grand Reserve Espresso', desc: 'Araku Valley, Lot 12 — 950m', price: 850, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80' },
-  { id: 'p2', name: 'Washed Natural', desc: 'Eastern Ghats — 920m', price: 680, image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80' },
-  { id: 'p3', name: 'Forest Honey', desc: 'Tribal Lot — 880m', price: 720, image: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700&q=80' },
-  { id: 'p4', name: 'Midnight Bloom', desc: 'Dark Roast Blend — 900m', price: 940, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=700&q=80' }
+  { id: 'p1', name: 'Grand Reserve Espresso', desc: 'Araku Valley, Lot 12 — 950m', price: 850, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80', category: 'Whole Bean' },
+  { id: 'p2', name: 'Washed Natural', desc: 'Eastern Ghats — 920m', price: 680, image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80', category: 'Ground' },
+  { id: 'p3', name: 'Forest Honey', desc: 'Tribal Lot — 880m', price: 720, image: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700&q=80', category: 'Whole Bean' },
+  { id: 'p4', name: 'Midnight Bloom', desc: 'Dark Roast Blend — 900m', price: 940, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=700&q=80', category: 'Cold Brew' },
+  { id: 'grand-reserve', name: 'Grand Reserve', desc: 'Notes of dark cocoa and berries.', price: 2100, image: 'https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=600&q=80', category: 'Whole Bean' },
+  { id: 'signature', name: 'Signature Blend', desc: 'Balanced with caramel sweetness.', price: 1500, image: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&q=80', category: 'Ground' },
+  { id: 'micro-climate', name: 'Micro Climate', desc: 'Bright, fruity, honey process.', price: 1900, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80', category: 'Whole Bean' },
+  { id: 'selection', name: 'Early Selection', desc: 'Light roast, highly aromatic.', price: 1700, image: 'https://images.unsplash.com/photo-1518832553480-161bb7469796?w=600&q=80', category: 'Ground' },
+  { id: 'sampler', name: 'Explorer Sampler', desc: 'Four 100g bags of our finest.', price: 3000, image: 'https://images.unsplash.com/photo-1498603536246-15572faa67a6?w=600&q=80', category: 'Capsules' }
 ];
 
 let cart = JSON.parse(localStorage.getItem('araku_cart')) || [];
@@ -38,9 +43,33 @@ const cartMarkup = `
   <div class="chk-box shadcn-card">
     <span class="chk-close" id="chk-close">&times;</span>
     
-    <div id="chk-form-area" class="shadcn-card-content">
+    <!-- Step 1: User Details -->
+    <div id="chk-details-area" class="shadcn-card-content" style="display:none;">
       <div class="chk-header-inline">
-        <h2>Secure Checkout</h2>
+        <h2>Checkout Details</h2>
+        <div class="chk-amount">Total: <span id="chk-details-total">₹0</span></div>
+      </div>
+      <div class="shadcn-form-area">
+        <div class="field-col">
+          <label for="cust-name">Full Name</label>
+          <input id="cust-name" name="name" placeholder="John Doe" />
+        </div>
+        <div class="field-col">
+          <label for="cust-email">Email Address</label>
+          <input id="cust-email" name="email" type="email" placeholder="john@example.com" />
+        </div>
+        <div class="field-col">
+          <label for="cust-phone">Phone Number</label>
+          <input id="cust-phone" name="phone" type="tel" placeholder="+91 00000 00000" />
+        </div>
+      </div>
+      <button class="btn-shadcn-primary" id="chk-continue-payment-btn">Continue to Payment</button>
+    </div>
+
+    <!-- Step 2: Payment Area -->
+    <div id="chk-form-area" class="shadcn-card-content" style="display:none;">
+      <div class="chk-header-inline">
+        <h2>Payment Method</h2>
         <div class="chk-amount">Pay: <span id="chk-final-price">₹0</span></div>
       </div>
 
@@ -88,14 +117,32 @@ const cartMarkup = `
         </div>
       </div>
 
-      <button class="btn-shadcn-primary" id="chk-pay-btn">Checkout</button>
+      <button class="btn-shadcn-primary" id="chk-pay-btn">Complete Payment</button>
     </div>
     
+    <!-- Step 3: Success Area -->
     <div id="chk-success-area" style="display:none; text-align:center;" class="shadcn-card-content">
       <div class="chk-check-icon">✓</div>
       <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #111;">Payment Successful</h2>
-      <p style="color:#666; font-size:14px; margin-bottom: 24px;">Your Araku order is being prepared for the journey to your cup.</p>
+      <p style="color:#666; font-size:14px; margin-bottom: 24px;">Your Araku order is being prepared for the journey to your cup. <br><br> Confirmation sent to <span id="success-email" style="font-weight: 600; color: #333;">your email</span>.</p>
       <button class="btn-shadcn-primary" id="chk-done-btn">Continue Browsing</button>
+    </div>
+  </div>
+</div>
+
+<div class="choice-modal" id="order-choice-modal">
+  <div class="choice-box">
+    <h3 class="choice-title">Order Type</h3>
+    <p class="choice-desc">How would you like to enjoy your Araku coffee today?</p>
+    <div class="choice-btns">
+      <div class="choice-btn" onclick="window.confirmOrderType('Take Away')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Take Away</span>
+      </div>
+      <div class="choice-btn" onclick="window.confirmOrderType('Spot Order')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Spot Order</span>
+      </div>
     </div>
   </div>
 </div>
@@ -113,7 +160,16 @@ const totalPriceEl = document.getElementById('cart-total-price');
 const checkoutModal = document.getElementById('checkout-modal');
 const chkClose = document.getElementById('chk-close');
 const btnCheckout = document.getElementById('cart-checkout-btn');
+
+const chkDetailsArea = document.getElementById('chk-details-area');
+const chkFormArea = document.getElementById('chk-form-area');
+const chkSuccessArea = document.getElementById('chk-success-area');
+
+const chkDetailsTotal = document.getElementById('chk-details-total');
 const chkFinalPrice = document.getElementById('chk-final-price');
+
+const choiceModal = document.getElementById('order-choice-modal');
+let pendingProductId = null;
 
 // ─── CORE LOGIC ─── //
 function openCart() {
@@ -128,19 +184,30 @@ function closeCart() {
 }
 
 window.addToCart = function(id) {
-  const product = CATALOG.find(p => p.id === id);
+  pendingProductId = id;
+  if (choiceModal) choiceModal.classList.add('visible');
+};
+
+window.confirmOrderType = function(type) {
+  if (!pendingProductId) return;
+  const product = CATALOG.find(p => p.id === pendingProductId);
   if (!product) return;
   
-  const existing = cart.find(item => item.id === id);
+  // Store with specific type key to allow mixed types of same product if needed
+  // But for now we just append the type to the cart object
+  const existing = cart.find(item => item.id === pendingProductId && item.orderType === type);
   if (existing) {
     existing.quantity += 1;
   } else {
-    cart.push({ ...product, quantity: 1 });
+    cart.push({ ...product, quantity: 1, orderType: type });
   }
+  
+  if (choiceModal) choiceModal.classList.remove('visible');
+  pendingProductId = null;
   
   saveCart();
   updateNavBadge();
-  openCart(); // Show cart when added
+  openCart(); 
 };
 
 window.removeFromCart = function(id) {
@@ -181,6 +248,7 @@ function renderCart() {
         <div class="cart-item-img" style="background-image:url('${item.image}')"></div>
         <div class="cart-item-details">
           <h4>${item.name}</h4>
+          <div class="cart-item-meta" style="font-size: 9px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${item.orderType || 'Standard'}</div>
           <div class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</div>
           <div class="cart-item-ctrls">
             <button onclick="updateQuantity('${item.id}', -1)">-</button>
@@ -217,15 +285,38 @@ document.addEventListener('click', e => {
   }
 });
 
-// Checkout Mock
+// Checkout Flow
 if (btnCheckout) {
   btnCheckout.addEventListener('click', () => {
     closeCart();
     checkoutModal.classList.add('visible');
-    chkFinalPrice.textContent = totalPriceEl.textContent;
     
-    document.getElementById('chk-form-area').style.display = 'block';
-    document.getElementById('chk-success-area').style.display = 'none';
+    // Reset to Step 1
+    chkDetailsArea.style.display = 'block';
+    chkFormArea.style.display = 'none';
+    chkSuccessArea.style.display = 'none';
+    
+    chkDetailsTotal.textContent = totalPriceEl.textContent;
+    chkFinalPrice.textContent = totalPriceEl.textContent;
+  });
+}
+
+const continueToPaymentBtn = document.getElementById('chk-continue-payment-btn');
+if (continueToPaymentBtn) {
+  continueToPaymentBtn.addEventListener('click', () => {
+    // Basic validation
+    const name = document.getElementById('cust-name').value;
+    const email = document.getElementById('cust-email').value;
+    const phone = document.getElementById('cust-phone').value;
+
+    if (!name || !email || !phone) {
+      alert('Please fill in all details to continue.');
+      return;
+    }
+
+    // Transition to Step 2
+    chkDetailsArea.style.display = 'none';
+    chkFormArea.style.display = 'block';
   });
 }
 
@@ -246,8 +337,14 @@ if (payBtn) {
       payBtn.textContent = originalText;
       payBtn.style.opacity = '1';
       
-      document.getElementById('chk-form-area').style.display = 'none';
-      document.getElementById('chk-success-area').style.display = 'block';
+      const email = document.getElementById('cust-email').value;
+      if (email) {
+        document.getElementById('success-email').textContent = email;
+      }
+      
+      // Step 3: Success
+      chkFormArea.style.display = 'none';
+      chkSuccessArea.style.display = 'block';
       
       // Clear Cart
       cart = [];
@@ -261,6 +358,15 @@ const doneBtn = document.getElementById('chk-done-btn');
 if (doneBtn) {
   doneBtn.addEventListener('click', () => {
     checkoutModal.classList.remove('visible');
+    
+    // Clear form fields
+    document.getElementById('cust-name').value = '';
+    document.getElementById('cust-email').value = '';
+    document.getElementById('cust-phone').value = '';
+    document.getElementById('cardholder-name').value = '';
+    document.getElementById('card-number').value = '';
+    document.getElementById('expiry').value = '';
+    document.getElementById('cvv').value = '';
   });
 }
 

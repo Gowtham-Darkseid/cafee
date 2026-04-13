@@ -1,44 +1,641 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Araku — Digital Menu</title>
+  <title>Araku — The Tasting Menu</title>
+  <meta name="description" content="Discover Araku's curated seasonal menu — from single-origin espressso to rare manual brews and artisan bakes, crafted from the Eastern Ghats.">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <!-- GSAP CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <link rel="stylesheet" href="/src/style.css">
+
+  <style>
+    /* ════════════════════════════════════════
+       MENU PAGE — COMPLETE STYLES
+    ════════════════════════════════════════ */
+
+    /* ── Hero ── */
+    .menu-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+    .menu-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(5,7,6,0.1) 0%, rgba(5,7,6,0.7) 60%, rgba(5,7,6,1) 100%),
+        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1800&q=90') center/cover no-repeat;
+    }
+    .menu-hero-number {
+      position: absolute;
+      top: 50%;
+      right: 6%;
+      transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(140px, 22vw, 280px);
+      font-weight: 600;
+      color: rgba(221,192,115,0.06);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .menu-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 64px 72px;
+    }
+    .menu-hero-kicker {
+      font-family: 'Jost', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .menu-hero-kicker::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      display: block;
+    }
+    .menu-hero-h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(56px, 9vw, 120px);
+      font-weight: 300;
+      line-height: 0.88;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+    .menu-hero-h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .menu-hero-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .menu-hero-desc {
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.5);
+      line-height: 1.9;
+      max-width: 380px;
+    }
+    .menu-hero-scroll {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .menu-hero-scroll span {
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.3);
+    }
+    .menu-hero-scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: dropScroll 2.2s infinite;
+    }
+
+    /* ── Category Nav Bar ── */
+    .menu-cat-nav {
+      position: sticky;
+      top: 60px;
+      z-index: 100;
+      background: rgba(5,7,6,0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(221,192,115,0.08);
+      display: flex;
+      align-items: center;
+      padding: 0 64px;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .menu-cat-nav::-webkit-scrollbar { display: none; }
+    .menu-cat-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.35);
+      padding: 20px 32px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: color 0.3s;
+      white-space: nowrap;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .menu-cat-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 32px;
+      right: 32px;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    .menu-cat-btn:hover { color: rgba(245,240,232,0.7); }
+    .menu-cat-btn.active {
+      color: var(--gold);
+    }
+    .menu-cat-btn.active::after {
+      transform: scaleX(1);
+    }
+    .menu-cat-nav-divider {
+      width: 1px;
+      height: 16px;
+      background: rgba(245,240,232,0.08);
+      flex-shrink: 0;
+    }
+
+    /* ── Menu Body ── */
+    .menu-body {
+      background: var(--deep);
+      min-height: 100vh;
+    }
+
+    /* ── Category Sections ── */
+    .menu-section {
+      padding: 100px 64px;
+      border-bottom: 1px solid rgba(221,192,115,0.06);
+      position: relative;
+    }
+    .menu-section-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Section header */
+    .menu-sec-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+      margin-bottom: 80px;
+    }
+    .menu-sec-left {}
+    .menu-sec-chapter {
+      font-family: 'Jost', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(221,192,115,0.5);
+      margin-bottom: 20px;
+    }
+    .menu-sec-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 7vw, 88px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+    .menu-sec-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .menu-sec-right {
+      padding-bottom: 8px;
+    }
+    .menu-sec-desc {
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.4);
+      line-height: 1.9;
+      max-width: 380px;
+      margin-left: auto;
+    }
+    .menu-sec-method {
+      margin-top: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: rgba(216,112,66,0.7);
+    }
+
+    /* Items grid */
+    .menu-items-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .menu-card {
+      position: relative;
+      padding: 0;
+      border: 1px solid rgba(221,192,115,0.06);
+      overflow: hidden;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+    }
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(221,192,115,0.02);
+      opacity: 0;
+      transition: opacity 0.4s;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .menu-card:hover::before { opacity: 1; }
+    .menu-card:hover { border-color: rgba(221,192,115,0.22); }
+
+    /* Card image thumbnail */
+    .menu-card-img {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .menu-card-img-inner {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+      filter: brightness(0.75) contrast(1.05);
+    }
+    .menu-card:hover .menu-card-img-inner {
+      transform: scale(1.06);
+      filter: brightness(0.9) contrast(1.08);
+    }
+    .menu-card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(5,7,6,0.7) 100%);
+      z-index: 1;
+    }
+    /* Text body area of non-featured card */
+    .menu-card-body {
+      padding: 28px 32px 32px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .menu-card-index {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(221,192,115,0.3);
+      letter-spacing: 0.15em;
+      margin-bottom: 14px;
+    }
+    .menu-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 2.2vw, 26px);
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      transition: color 0.3s;
+    }
+    .menu-card:hover .menu-card-name { color: var(--gold); }
+    .menu-card-desc {
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.35);
+      line-height: 1.85;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+    .menu-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .menu-card-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .menu-card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .menu-tag {
+      font-family: 'Jost', sans-serif;
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid rgba(221,192,115,0.2);
+      color: rgba(221,192,115,0.55);
+      border-radius: 1px;
+      transition: all 0.3s;
+    }
+    .menu-card:hover .menu-tag {
+      border-color: rgba(221,192,115,0.4);
+      color: rgba(221,192,115,0.8);
+    }
+
+    /* Featured card (spans full width) */
+    .menu-card-featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 0;
+      min-height: 320px;
+    }
+    .menu-card-featured .menu-card-content {
+      padding: 48px 52px;
+    }
+    .menu-card-feat-img {
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-card-feat-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(5,7,6,0.6) 0%, transparent 60%);
+    }
+
+    /* ── Image Divider Strip ── */
+    .menu-img-strip {
+      height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-img-strip-bg {
+      position: absolute;
+      inset: -20%;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.45) contrast(1.1);
+      transition: transform 0.1s linear;
+    }
+    .menu-img-strip-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .menu-img-strip h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .menu-img-strip h2 em { color: var(--gold); font-style: italic; }
+    .menu-img-strip p {
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.5);
+      margin-top: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Pairing Table (Extras section) ── */
+    .menu-pairing {
+      background: rgba(221,192,115,0.03);
+      border: 1px solid rgba(221,192,115,0.08);
+      padding: 48px 52px;
+      margin-top: 2px;
+    }
+    .menu-pairing-head {
+      font-family: 'Jost', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+    .pairing-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px dotted rgba(221,192,115,0.1);
+      gap: 20px;
+    }
+    .pairing-row:last-child { border-bottom: none; }
+    .pairing-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--cream);
+    }
+    .pairing-dots {
+      flex: 1;
+      height: 1px;
+      border-top: 1px dotted rgba(221,192,115,0.15);
+    }
+    .pairing-note {
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.35);
+      text-align: right;
+    }
+    .pairing-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--gold);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ── CTA section ── */
+    .menu-cta {
+      background: var(--forest);
+      padding: 120px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-cta::before {
+      content: 'ARAKU';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(80px, 18vw, 200px);
+      font-weight: 700;
+      color: rgba(221,192,115,0.03);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .menu-cta-eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .menu-cta-h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 5.5vw, 72px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.05;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .menu-cta-h2 em { font-style: italic; color: var(--gold); }
+    .menu-cta-sub {
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.4);
+      line-height: 1.9;
+      max-width: 480px;
+      margin: 0 auto 48px;
+    }
+    .menu-cta-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    .btn-gold-fill {
+      background: var(--gold);
+      color: var(--deep);
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s;
+    }
+    .btn-gold-fill:hover { background: var(--gold-lt); }
+    .btn-cream-outline {
+      background: transparent;
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border: 1px solid rgba(245,240,232,0.25);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s;
+    }
+    .btn-cream-outline:hover { border-color: var(--cream); }
+
+    /* ── Seasonal badge ── */
+    .menu-seasonal-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(216,112,66,0.12);
+      border: 1px solid rgba(216,112,66,0.3);
+      padding: 4px 12px;
+      margin-bottom: 16px;
+    }
+    .menu-seasonal-flag span {
+      font-family: 'Jost', sans-serif;
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terra);
+    }
+    .menu-seasonal-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--terra);
+      border-radius: 50%;
+      animation: blinkDot 1.5s ease-in-out infinite;
+    }
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .menu-hero-content { padding: 0 24px 56px; }
+      .menu-hero-bottom { flex-direction: column; align-items: flex-start; gap: 32px; }
+      .menu-cat-nav { padding: 0 24px; top: 56px; }
+      .menu-section { padding: 72px 24px; }
+      .menu-sec-header { grid-template-columns: 1fr; gap: 24px; }
+      .menu-items-grid { grid-template-columns: 1fr; }
+      .menu-card-featured { grid-template-columns: 1fr; }
+      .menu-card-feat-img { height: 220px; }
+      .menu-cta { padding: 80px 24px; }
+      .menu-cta-btns { flex-direction: column; align-items: center; }
+      .pairing-row { grid-template-columns: 1fr auto; }
+      .pairing-note { display: none; }
+      .pairing-dots { display: none; }
+      .menu-hero-number { display: none; }
+    }
+  </style>
 </head>
 
-<body style="background: var(--ivory);">
+<body style="background: var(--deep);">
   <!-- AMBIENT GLOWS -->
   <div style="position:fixed; inset:0; z-index:-999; pointer-events:none; overflow:hidden;">
-    <div style="position:absolute; width:60vw; height:60vw; background:radial-gradient(circle, var(--terra) 0%, transparent 60%); top:-20%; left:-20%; opacity:0.12; filter:blur(80px); border-radius:50%;"></div>
-    <div style="position:absolute; width:70vw; height:70vw; background:radial-gradient(circle, var(--sage) 0%, transparent 60%); bottom:-30%; right:-20%; opacity:0.08; filter:blur(100px); border-radius:50%;"></div>
+    <div style="position:absolute; width:50vw; height:50vw; background:radial-gradient(circle, var(--terra) 0%, transparent 60%); top:-10%; left:-15%; opacity:0.1; filter:blur(80px); border-radius:50%;"></div>
+    <div style="position:absolute; width:60vw; height:60vw; background:radial-gradient(circle, var(--gold) 0%, transparent 60%); bottom:-20%; right:-15%; opacity:0.05; filter:blur(100px); border-radius:50%;"></div>
   </div>
 
   <div class="cursor" id="cursor"></div>
 
   <!-- NAV -->
-  <nav id="main-nav" style="background:var(--deep); border-bottom:1px solid rgba(245,240,232,0.1);">
+  <nav id="main-nav" style="background:rgba(5,7,6,0.97); backdrop-filter:blur(20px); border-bottom:1px solid rgba(245,240,232,0.06);">
     <a href="index.html" class="nav-logo">ARAKU<span>.</span></a>
     <ul class="nav-links">
       <li><a href="index.html#origin">Our Story</a></li>
-      <li><a href="menu.html">Menu</a></li>
+      <li><a href="menu.html" style="color: var(--gold);">Menu</a></li>
       <li><a href="index.html#journal">Journal</a></li>
-      <li><a href="index.html#locations">Locate Us</a></li>
     </ul>
     <div class="nav-right">
-      <a href="reserve.html" style="text-decoration:none; margin-right: 20px; color: var(--cream); display:flex; align-items:center;" title="Book a Table">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-      </a>
-      <a href="shop.html" class="nav-shop" style="text-decoration:none;">Shop Coffee</a>
+      <a href="reserve.html" class="nav-book-btn">Book a Table</a>
       <div class="nav-cart" id="open-cart" title="View Cart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;">
           <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -47,155 +644,504 @@
         </svg>
         <span class="cart-count">0</span>
       </div>
-      <div class="nav-ham" style="margin-left: 20px;">
-        <span></span><span></span>
-      </div>
     </div>
   </nav>
 
-  <!-- MENU HERO WITH PARALLAX -->
-  <section class="menu-hero parallax-container" style="position:relative; height: 60vh; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center;">
-    <div class="parallax-bg" style="position:absolute; top:-20%; left:0; width:100%; height:140%; background:url('https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=1600&q=80') center/cover; opacity: 0.7; z-index:-1;" data-speed="0.5"></div>
-    <div class="parallax-overlay" style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(18,26,15,0.4), rgba(18,26,15,0.8)); z-index:-1;"></div>
-    <div style="padding: 2rem; position:relative; z-index:1;">
-      <div class="gsap-reveal" style="font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px;">The Harvest</div>
-      <h1 class="gsap-reveal" style="font-family:'Cormorant Garamond',serif; font-size:clamp(50px, 8vw, 90px); color:var(--cream); font-weight:300; line-height: 1;">Our <em>Tasting </em> Menu</h1>
-      <p class="gsap-reveal" style="color:rgba(245,240,232,0.7); margin-top:1.5rem; font-size:16px; font-weight:300; max-width:500px; margin-inline:auto; line-height:1.8;">Experience the nuances of the Eastern Ghats through our carefully curated selections.</p>
+  <!-- ══════════════ HERO ══════════════ -->
+  <section class="menu-hero">
+    <div class="menu-hero-bg"></div>
+    <div class="menu-hero-number" aria-hidden="true">01</div>
+    <div class="menu-hero-content">
+      <div class="menu-hero-kicker">Seasonal · 2026 Edition</div>
+      <h1 class="menu-hero-h1">The<br><em>Tasting</em><br>Menu</h1>
+      <div class="menu-hero-bottom">
+        <p class="menu-hero-desc">Carefully curated selections from Araku's micro-lots — each item designed to reveal the altitude, intention, and craft that defines our valley.</p>
+        <div class="menu-hero-scroll">
+          <div class="menu-hero-scroll-line"></div>
+          <span>Explore</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- MENU CONTENT -->
-  <section class="menu-layout">
-    
-    <!-- ESPRESSO ROW -->
-    <div class="menu-col-left gsap-fade">
-      <div class="menu-category-title">
-        <span>Chapter 01</span>
-        Espresso<br><em>Bar</em>
+  <!-- ══════════════ CATEGORY NAV ══════════════ -->
+  <nav class="menu-cat-nav" id="menu-cat-nav" aria-label="Menu categories">
+    <button class="menu-cat-btn active" onclick="scrollToSection('espresso')">Espresso Bar</button>
+    <div class="menu-cat-nav-divider"></div>
+    <button class="menu-cat-btn" onclick="scrollToSection('brew')">Manual Brew</button>
+    <div class="menu-cat-nav-divider"></div>
+    <button class="menu-cat-btn" onclick="scrollToSection('cold')">Cold &amp; Iced</button>
+    <div class="menu-cat-nav-divider"></div>
+    <button class="menu-cat-btn" onclick="scrollToSection('bakes')">Artisan Bakes</button>
+    <div class="menu-cat-nav-divider"></div>
+    <button class="menu-cat-btn" onclick="scrollToSection('extras')">Sides &amp; Extras</button>
+  </nav>
+
+  <!-- ══════════════ MENU BODY ══════════════ -->
+  <div class="menu-body">
+
+    <!-- ── 01 ESPRESSO BAR ── -->
+    <section class="menu-section" id="espresso">
+      <div class="menu-section-inner">
+        <div class="menu-sec-header reveal">
+          <div class="menu-sec-left">
+            <div class="menu-sec-chapter">Chapter 01</div>
+            <div class="menu-sec-title">Espresso<br><em>Bar</em></div>
+          </div>
+          <div class="menu-sec-right">
+            <p class="menu-sec-desc">Our espresso program is built around Araku micro-lots, pulled on a La Marzocco Linea PB at 93°C. Every shot is dialed in daily by our resident barista.</p>
+          </div>
+        </div>
+
+        <div class="menu-items-grid">
+          <!-- Featured card -->
+          <div class="menu-card menu-card-featured reveal" onclick="window.showToast('Selected: Grand Reserve Espresso')">
+            <div class="menu-card-content">
+              <div class="menu-seasonal-flag"><div class="menu-seasonal-dot"></div><span>Chef's Selection</span></div>
+              <div class="menu-card-index">01.01</div>
+              <div class="menu-card-name">Grand Reserve Espresso</div>
+              <p class="menu-card-desc">Our triple-certified organic flagship. A seasonal blend of Lot 12 and Lot 7, roasted to a precise medium. Expect deep cocoa, toasted almond, and a lingering bittersweet finish.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹220</div>
+                <div class="menu-card-tags">
+                  <span class="menu-tag">Single Origin</span>
+                  <span class="menu-tag">Organic</span>
+                </div>
+              </div>
+            </div>
+            <div class="menu-card-feat-img" style="background-image:url('https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=700&q=80');"></div>
+          </div>
+
+          <div class="menu-card reveal" onclick="window.showToast('Item selection noted.')">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1541167760496-1628856ab772?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">01.02</div>
+              <div class="menu-card-name">Cortado</div>
+              <p class="menu-card-desc">Equal parts espresso and perfectly steamed grass-fed A2 milk. Rich, balanced, and intensely satisfying.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹280</div>
+                <div class="menu-card-tags"><span class="menu-tag">Milk</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal" onclick="window.showToast('Item selection noted.')">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">01.03</div>
+              <div class="menu-card-name">Micro-Climate Flat White</div>
+              <p class="menu-card-desc">Silky micro-foam over our high-altitude single-origin lot. Exceptional sweetness and clarity that evolves as the cup cools.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹320</div>
+                <div class="menu-card-tags"><span class="menu-tag">Milk</span><span class="menu-tag">Signature</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">01.04</div>
+              <div class="menu-card-name">Vanilla Bean Latte</div>
+              <p class="menu-card-desc">Infused with cold-extracted Madagascar bourbon vanilla bean. Finished with raw cane turbinado sugar and a sprinkle of cacao.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹350</div>
+                <div class="menu-card-tags"><span class="menu-tag">Milk</span><span class="menu-tag">Sweet</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">01.05</div>
+              <div class="menu-card-name">Kapikachhu Cappuccino</div>
+              <p class="menu-card-desc">A classic cappuccino elevated with Ayurvedic kapikachhu powder — earthy, protein-rich, and with a subtle nuttiness.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹300</div>
+                <div class="menu-card-tags"><span class="menu-tag">Milk</span><span class="menu-tag">Wellness</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">01.06</div>
+              <div class="menu-card-name">Ristretto Lungo</div>
+              <p class="menu-card-desc">A precise 15ml ristretto followed by a slow 60ml lungo pull — two expressions of the same bean in one cup. For the purist.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹260</div>
+                <div class="menu-card-tags"><span class="menu-tag">Black</span><span class="menu-tag">Pure</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="menu-col-right">
-      <div class="menu-items-wrapper">
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Grand Reserve Single</h3>
-            <span class="menu-item-price">₹200</span>
-          </div>
-          <p class="menu-item-desc">Our signature triple-certified organic blend pulled short. Notes of dark chocolate and toasted almond.</p>
-        </div>
-        
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Cortado</h3>
-            <span class="menu-item-price">₹280</span>
-          </div>
-          <p class="menu-item-desc">Equal parts espresso and perfectly steamed grass-fed milk for a rich, balanced profile.</p>
-        </div>
-        
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Micro-Climate Flat White</h3>
-            <span class="menu-item-price">₹320</span>
-          </div>
-          <p class="menu-item-desc">Silky micro-foam paired with our high-altitude single origin lot. Exceptional clarity and sweetness.</p>
-        </div>
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Vanilla Bean Latte</h3>
-            <span class="menu-item-price">₹350</span>
-          </div>
-          <p class="menu-item-desc">Infused with real Madagascar bourbon vanilla bean and a touch of raw cane sugar.</p>
+    </section>
+
+    <!-- ── IMAGE STRIP 1 ── -->
+    <div class="menu-img-strip">
+      <div class="menu-img-strip-bg" id="strip-1" style="background-image:url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1600&q=80');"></div>
+      <div class="menu-img-strip-content">
+        <div>
+          <h2>The Art of<br><em>Manual Brew</em></h2>
+          <p>V60 · Chemex · Aeropress · Siphon</p>
         </div>
       </div>
-      
-      <div class="menu-image-break gsap-fade" style="background-image: url('https://images.unsplash.com/photo-1541167760496-1628856ab772?w=800&q=80');"></div>
     </div>
 
-    <!-- POUR OVER ROW -->
-    <div class="menu-col-left gsap-fade">
-      <div class="menu-category-title">
-        <span>Chapter 02</span>
-        Manual<br><em>Brew</em>
+    <!-- ── 02 MANUAL BREW ── -->
+    <section class="menu-section" id="brew">
+      <div class="menu-section-inner">
+        <div class="menu-sec-header reveal">
+          <div class="menu-sec-left">
+            <div class="menu-sec-chapter">Chapter 02</div>
+            <div class="menu-sec-title">Manual<br><em>Brew</em></div>
+          </div>
+          <div class="menu-sec-right">
+            <p class="menu-sec-desc">Each pour-over is brewed to order — grind, bloom, pour. Our brew ratios and water temperature are dialled per lot for maximum expression.</p>
+            <div class="menu-sec-method">Prepared via V60, Chemex, or Aeropress</div>
+          </div>
+        </div>
+
+        <div class="menu-items-grid">
+          <div class="menu-card menu-card-featured reveal">
+            <div class="menu-card-content">
+              <div class="menu-seasonal-flag"><div class="menu-seasonal-dot"></div><span>Rare Lot</span></div>
+              <div class="menu-card-index">02.01</div>
+              <div class="menu-card-name">Lot 03: Washed Geisha</div>
+              <p class="menu-card-desc">A rare experimental lot from our highest farm block at 950m altitude. Grown under a canopy of sal and bamboo. Expect jasmine, bergamot, and a long black tea finish that lingers for minutes.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹480</div>
+                <div class="menu-card-tags">
+                  <span class="menu-tag">950m</span>
+                  <span class="menu-tag">Rare</span>
+                  <span class="menu-tag">Floral</span>
+                </div>
+              </div>
+            </div>
+            <div class="menu-card-feat-img" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700&q=80');"></div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1498804103079-a6351b050096?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">02.02</div>
+              <div class="menu-card-name">Lot 14: Honey Process</div>
+              <p class="menu-card-desc">Sun-dried with mucilage intact. Intensely sweet with notes of peach, apricot, and wildflower honey.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹380</div>
+                <div class="menu-card-tags"><span class="menu-tag">Honey</span><span class="menu-tag">Fruity</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1522992319-0365e5f11656?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">02.03</div>
+              <div class="menu-card-name">Forest Tribe Natural</div>
+              <p class="menu-card-desc">A dry-processed lot harvested by our longest-standing tribal partner families in the Jinni block. Blueberry, wine, and dark plum.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹420</div>
+                <div class="menu-card-tags"><span class="menu-tag">Natural</span><span class="menu-tag">Winey</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1507133750070-4f114c1a5b6d?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">02.04</div>
+              <div class="menu-card-name">Siphon Special</div>
+              <p class="menu-card-desc">Vacuum-brewed in a Hario glass siphon at tableside. A theatrical and immaculate extraction — clear, delicate, and tea-like.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹550</div>
+                <div class="menu-card-tags"><span class="menu-tag">Tableside</span><span class="menu-tag">Theatre</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="menu-col-right">
-      <p class="gsap-fade" style="margin-bottom: 40px; font-style:italic; color:var(--terra); font-family:'Cormorant Garamond', serif; font-size: 22px;">Prepared via V60, Chemex, or Aeropress</p>
-      
-      <div class="menu-items-wrapper">
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Lot 14: Honey Process</h3>
-            <span class="menu-item-price">₹380</span>
+    </section>
+
+    <!-- ── 03 COLD & ICED ── -->
+    <section class="menu-section" id="cold">
+      <div class="menu-section-inner">
+        <div class="menu-sec-header reveal">
+          <div class="menu-sec-left">
+            <div class="menu-sec-chapter">Chapter 03</div>
+            <div class="menu-sec-title">Cold<br><em>&amp; Iced</em></div>
           </div>
-          <p class="menu-item-desc">Sun-dried with the mucilage intact. Highly sweet with tasting notes of peach and wildflower honey.</p>
+          <div class="menu-sec-right">
+            <p class="menu-sec-desc">Our cold coffee program is built on patience — each brew steeped, chilled, or flash-brewed for a minimum of 12 hours before it reaches your glass.</p>
+          </div>
         </div>
-        
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Lot 03: Washed Geisha</h3>
-            <span class="menu-item-price">₹450</span>
+
+        <div class="menu-items-grid">
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1600718374662-0483d2b9da44?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">03.01</div>
+              <div class="menu-card-name">Cold Drip Tower</div>
+              <p class="menu-card-desc">Steeped for 18 hours in a traditional Yama glass tower. Concentrate served over a single hand-carved clear ice sphere.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹400</div>
+                <div class="menu-card-tags"><span class="menu-tag">18hr</span><span class="menu-tag">Concentrate</span></div>
+              </div>
+            </div>
           </div>
-          <p class="menu-item-desc">A rare experimental lot from our highest farm block at 950m. Jasmine, bergamot, and a black tea finish.</p>
-        </div>
-        
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Cold Drip Tower</h3>
-            <span class="menu-item-price">₹400</span>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">03.02</div>
+              <div class="menu-card-name">Flash Brew Highball</div>
+              <p class="menu-card-desc">Hot-brewed over ice in a Japanese flash technique. Captures volatile aromatics lost in cold brewing — bright, clear, and refreshing.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹360</div>
+                <div class="menu-card-tags"><span class="menu-tag">Flash</span><span class="menu-tag">Bright</span></div>
+              </div>
+            </div>
           </div>
-          <p class="menu-item-desc">Steeped for 18 hours using a traditional Yama glass tower. Served over a single clear ice sphere.</p>
+
+          <div class="menu-card menu-card-featured reveal">
+            <div class="menu-card-content">
+              <div class="menu-seasonal-flag"><div class="menu-seasonal-dot"></div><span>Summer Favourite</span></div>
+              <div class="menu-card-index">03.03</div>
+              <div class="menu-card-name">Midnight Nitro Cold Brew</div>
+              <p class="menu-card-desc">Our signature 24-hour cold brew infused with nitrogen at point of pour. Cascades like a dark stout — velvety, low-acid, and extraordinarily smooth. Zero sugar. Zero milk. Pure Araku.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹440</div>
+                <div class="menu-card-tags">
+                  <span class="menu-tag">Nitrogen</span>
+                  <span class="menu-tag">24hr</span>
+                  <span class="menu-tag">Vegan</span>
+                </div>
+              </div>
+            </div>
+            <div class="menu-card-feat-img" style="background-image:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80');"></div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1578374173705-969cbe6f2d6b?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">03.04</div>
+              <div class="menu-card-name">Coconut Cold Brew</div>
+              <p class="menu-card-desc">Single-origin cold brew blended with fresh Araku coconut water. Tropical, mineral, and electrolyte-rich.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹380</div>
+                <div class="menu-card-tags"><span class="menu-tag">Coconut</span><span class="menu-tag">Vegan</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="menu-image-break gsap-fade" style="background-image: url('https://images.unsplash.com/photo-1498804103079-a6351b050096?w=800&q=80'); height: 300px;"></div>
+    </section>
+
+    <!-- ── IMAGE STRIP 2 ── -->
+    <div class="menu-img-strip">
+      <div class="menu-img-strip-bg" style="background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=1600&q=80');"></div>
+      <div class="menu-img-strip-content">
+        <div>
+          <h2>Baked with<br><em>Intention</em></h2>
+          <p>Wild-fermented · Seasonal ingredients · No shortcuts</p>
+        </div>
+      </div>
     </div>
 
-    <!-- BAKES ROW -->
-    <div class="menu-col-left gsap-fade">
-      <div class="menu-category-title">
-        <span>Chapter 03</span>
-        Artisan<br><em>Bakes</em>
+    <!-- ── 04 ARTISAN BAKES ── -->
+    <section class="menu-section" id="bakes">
+      <div class="menu-section-inner">
+        <div class="menu-sec-header reveal">
+          <div class="menu-sec-left">
+            <div class="menu-sec-chapter">Chapter 04</div>
+            <div class="menu-sec-title">Artisan<br><em>Bakes</em></div>
+          </div>
+          <div class="menu-sec-right">
+            <p class="menu-sec-desc">Our bakes are made in-house each morning using wild-fermented doughs, seasonal produce, and zero refined shortcuts. Baked in two batches: 7am and 11am.</p>
+          </div>
+        </div>
+
+        <div class="menu-items-grid">
+          <div class="menu-card menu-card-featured reveal">
+            <div class="menu-card-content">
+              <div class="menu-card-index">04.01</div>
+              <div class="menu-card-name">Sourdough Croissant</div>
+              <p class="menu-card-desc">Wild-fermented for 48 hours and laminated 27 times with Échiré cultured French butter. Shatteringly crisp exterior, silky honeycomb interior. Baked fresh every two hours.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹220</div>
+                <div class="menu-card-tags"><span class="menu-tag">Wild Yeast</span><span class="menu-tag">Vegetarian</span></div>
+              </div>
+            </div>
+            <div class="menu-card-feat-img" style="background-image:url('https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=700&q=80');"></div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">04.02</div>
+              <div class="menu-card-name">Cardamom Bun</div>
+              <p class="menu-card-desc">A Scandinavian kanelbullar reimagined with freshly ground Indian green cardamom. Pearl sugar crust, soft laminated interior.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹180</div>
+                <div class="menu-card-tags"><span class="menu-tag">Cardamom</span><span class="menu-tag">Sweet</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">04.03</div>
+              <div class="menu-card-name">Olive Oil Citrus Cake</div>
+              <p class="menu-card-desc">Moist crumb made with cold-pressed Sicilian olive oil, fresh Coorg orange zest, and finished with a rosemary sugar glaze.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹240</div>
+                <div class="menu-card-tags"><span class="menu-tag">Gluten-Free Option</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-card reveal">
+            <div class="menu-card-img">
+              <div class="menu-card-img-inner" style="background-image:url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=700&q=80');"></div>
+              <div class="menu-card-img-overlay"></div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-index">04.04</div>
+              <div class="menu-card-name">Coffee Praline Tart</div>
+              <p class="menu-card-desc">Buttery tart shell filled with a Manjari chocolate ganache spiked with Araku espresso. Crowned with a hazelnut praline cluster.</p>
+              <div class="menu-card-footer">
+                <div class="menu-card-price">₹290</div>
+                <div class="menu-card-tags"><span class="menu-tag">Chocolate</span><span class="menu-tag">Signature</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="menu-col-right">
-      <div class="menu-items-wrapper">
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Sourdough Croissant</h3>
-            <span class="menu-item-price">₹220</span>
+    </section>
+
+    <!-- ── 05 SIDES & EXTRAS ── -->
+    <section class="menu-section" id="extras">
+      <div class="menu-section-inner">
+        <div class="menu-sec-header reveal">
+          <div class="menu-sec-left">
+            <div class="menu-sec-chapter">Chapter 05</div>
+            <div class="menu-sec-title">Sides &amp;<br><em>Extras</em></div>
           </div>
-          <p class="menu-item-desc">Wild-fermented and laminated with cultured French butter. Baked fresh every two hours.</p>
-        </div>
-        
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Cardamom Bun</h3>
-            <span class="menu-item-price">₹180</span>
+          <div class="menu-sec-right">
+            <p class="menu-sec-desc">Thoughtful additions to complement your order — house-made milks, upgrades, and curated pairings.</p>
           </div>
-          <p class="menu-item-desc">A nod to Nordic baking traditions, infused with freshly ground Indian green cardamom.</p>
         </div>
-        
-        <div class="menu-item gsap-stagger">
-          <div class="menu-item-row">
-            <h3 class="menu-item-name">Olive Oil Citrus Cake</h3>
-            <span class="menu-item-price">₹240</span>
+
+        <div class="menu-pairing reveal">
+          <div class="menu-pairing-head">Additions &amp; Upgrades</div>
+
+          <div class="pairing-row">
+            <div class="pairing-name">Oat Milk Upgrade</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">Oatly Barista Edition</div>
+            <div class="pairing-price">₹60</div>
           </div>
-          <p class="menu-item-desc">Moist, dense crumb made with cold-pressed olive oil, fresh orange zest, and a rosemary glaze.</p>
+          <div class="pairing-row">
+            <div class="pairing-name">Coconut Milk Upgrade</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">Freshly pressed, local</div>
+            <div class="pairing-price">₹60</div>
+          </div>
+          <div class="pairing-row">
+            <div class="pairing-name">Extra Espresso Shot</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">Grand Reserve blend</div>
+            <div class="pairing-price">₹80</div>
+          </div>
+          <div class="pairing-row">
+            <div class="pairing-name">Vanilla Bean Syrup</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">Madagascar bourbon, house-made</div>
+            <div class="pairing-price">₹50</div>
+          </div>
+          <div class="pairing-row">
+            <div class="pairing-name">Chocolate on the Side</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">72% Valrhona squares (×2)</div>
+            <div class="pairing-price">₹120</div>
+          </div>
+          <div class="pairing-row">
+            <div class="pairing-name">Cupping Flight (3 lots)</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">Guided tasting with tasting cards</div>
+            <div class="pairing-price">₹680</div>
+          </div>
+          <div class="pairing-row">
+            <div class="pairing-name">Water (Still or Sparkling)</div>
+            <div class="pairing-dots"></div>
+            <div class="pairing-note">Himalayan / San Pellegrino 500ml</div>
+            <div class="pairing-price">₹120</div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <div class="menu-cta">
+      <div class="menu-cta-eyebrow">Reserve Your Experience</div>
+      <h2 class="menu-cta-h2">Ready to taste<br>the <em>valley</em>?</h2>
+      <p class="menu-cta-sub">Each visit to Araku is a ritual. Book a guided tasting session, a cupping flight, or simply secure your seat in our roastery café for the morning harvest menu.</p>
+      <div class="menu-cta-btns">
+        <a href="reserve.html" class="btn-gold-fill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Book a Table
+        </a>
+        <a href="shop.html" class="btn-cream-outline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          Shop the Beans
+        </a>
       </div>
     </div>
 
-  </section>
-
-  <!-- CTA PARALLAX -->
-  <div class="parallax-container" style="position:relative; height: 40vh; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center;">
-    <div class="parallax-bg" style="position:absolute; top:-20%; left:0; width:100%; height:140%; background:url('https://images.unsplash.com/photo-1507133750070-4f114c1a5b6d?w=1600&q=80') center/cover;" data-speed="0.3"></div>
-    <div class="parallax-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:0;"></div>
-    <div style="position:relative; z-index:1;">
-      <h2 style="font-family:'Cormorant Garamond',serif; color:var(--ivory); font-size:42px; margin-bottom:20px;">Ready for the experience?</h2>
-      <a href="reserve.html" class="btn-fill magnetic-btn" style="text-decoration:none;">Book a Table</a>
-    </div>
-  </div>
+  </div><!-- end menu-body -->
 
   <!-- FOOTER -->
   <footer id="footer" class="footer" style="padding-bottom: 0; margin-top: 0;">
@@ -205,21 +1151,10 @@
         <p class="footer-tagline">"From the ancient forests of the Eastern Ghats — coffee that carries the soul of the land and the hands that tend it."</p>
         <div class="footer-socials">
           <a class="fsoc" href="#" aria-label="X (Twitter)">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117v.001z"/>
-            </svg>
-          </a>
-          <a class="fsoc" href="#" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117v.001z"/></svg>
           </a>
           <a class="fsoc" href="#" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
         </div>
       </div>
@@ -229,32 +1164,42 @@
           <li><a href="shop.html">Whole Bean</a></li>
           <li><a href="shop.html">Ground Coffee</a></li>
           <li><a href="shop.html">Cold Brew</a></li>
-          <li><a href="shop.html">Subscriptions</a></li>
         </ul>
       </div>
       <div class="f-reveal">
         <div class="footer-col-head">Company</div>
         <ul class="footer-list">
           <li><a href="index.html#origin">Our Story</a></li>
-          <li><a href="index.html#process">The Farmers</a></li>
-          <li><a href="index.html#process">Sustainability</a></li>
-          <li><a href="#">Careers</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="index.html#journal">Journal</a></li>
         </ul>
       </div>
       <div class="f-reveal">
         <div class="footer-col-head">Contact</div>
         <div style="font-size:12px;font-weight:300;color:rgba(245,240,232,0.4);line-height:1.9;">
-          hello@araku.coffee<br>
-          +91 98765 43210<br>
-          Araku Valley, AP
+          hello@araku.coffee<br>+91 98765 43210<br>Araku Valley, AP
         </div>
       </div>
     </div>
-    
+    <div class="footer-map-section reveal">
+      <div class="footer-map-wrap">
+        <div class="footer-map-label">
+          <div class="fml-eyebrow">The Roastery</div>
+          <div class="fml-name">Araku Valley, India</div>
+        </div>
+        <iframe 
+          class="footer-map-iframe"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.2312!2d82.8524!3d18.3284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a3a79f18a54366b%3A0xc3b5e4062464736f!2sAraku%20Valley%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
     <div class="footer-mega reveal">
       <span>A</span><span>R</span><span>A</span><span>K</span><span>U</span>
     </div>
-    
     <div class="footer-bottom f-reveal reveal" style="border-top: none; padding-top: 10px;">
       <div class="footer-copy">© 2026 Araku Valley Coffee. All rights reserved.</div>
       <div class="footer-cert">
@@ -268,6 +1213,68 @@
   <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
+
+  <script>
+    /* ── Smooth scroll to section ── */
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const navH = document.getElementById('menu-cat-nav')?.offsetHeight || 0;
+      const mainNavH = document.getElementById('main-nav')?.offsetHeight || 0;
+      const y = el.getBoundingClientRect().top + window.scrollY - navH - mainNavH;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+
+    /* ── Active nav highlight on scroll ── */
+    const sections = ['espresso','brew','cold','bakes','extras'];
+    const catBtns  = document.querySelectorAll('.menu-cat-btn');
+    const mainNavH = document.getElementById('main-nav')?.offsetHeight || 60;
+
+    function updateActiveNav() {
+      let current = '';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (window.scrollY >= el.offsetTop - mainNavH - 80) current = id;
+      });
+      catBtns.forEach((btn, i) => {
+        btn.classList.toggle('active', sections[i] === current);
+      });
+    }
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+    /* ── Cursor ── */
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      if (cursor) { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { if (cursor) { cursor.style.width = '20px'; cursor.style.height = '20px'; } });
+      el.addEventListener('mouseleave', () => { if (cursor) { cursor.style.width = '10px'; cursor.style.height = '10px'; } });
+    });
+
+    /* ── Reveal on scroll ── */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 60);
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ── Scroll to top ── */
+    const stt = document.getElementById('scroll-to-top');
+    if (stt) {
+      window.addEventListener('scroll', () => stt.classList.toggle('show', window.scrollY > 600), { passive: true });
+      stt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    /* ── GSAP Hero entrance ── */
+    if (typeof gsap !== 'undefined') {
+      gsap.from('.menu-hero-kicker', { y: 24, opacity: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
+      gsap.from('.menu-hero-h1', { y: 50, opacity: 0, duration: 1.4, delay: 0.5, ease: 'expo.out' });
+      gsap.from('.menu-hero-desc', { y: 20, opacity: 0, duration: 1, delay: 0.9, ease: 'power3.out' });
+    }
+  </script>
 
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/cart.js"></script>

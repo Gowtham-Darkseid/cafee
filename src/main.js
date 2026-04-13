@@ -7,10 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wait for the inner animation to finish (approx 2.4s) before triggering the curtain slide out
     setTimeout(() => {
       preloader.classList.add('loaded');
-      // Completely remove from DOM after the clip-path transition is over to allow scrolling
-      setTimeout(() => preloader.remove(), 1200);
+      // Keeping preloader in DOM for reuse in transitions
+      // setTimeout(() => preloader.remove(), 1200);
     }, 2400); 
   }
+  
+  initNavTransitions();
+  initTestimonialAutoScroll();
 });
 
 /* ─── Cursor ─── */
@@ -42,8 +45,21 @@ reveals.forEach(el => io.observe(el));
 /* ─── Product tabs ─── */
 document.querySelectorAll('.ptab').forEach(tab => {
   tab.addEventListener('click', () => {
+    const category = tab.textContent;
     document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
+
+    // Filter products
+    const cards = document.querySelectorAll('.product-card');
+    cards.forEach(card => {
+      const cardTag = card.querySelector('.product-tag').textContent;
+      if (category === 'All' || cardTag.toLowerCase().includes(category.toLowerCase())) {
+        card.style.display = 'flex';
+        gsap.fromTo(card, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 });
+      } else {
+        card.style.display = 'none';
+      }
+    });
   });
 });
 
@@ -100,6 +116,49 @@ if (track) track.innerHTML += track.innerHTML;
 
   setInterval(swap, 3000);
 })();
+
+/* ─── Cinematic Nav Transitions ─── */
+function initNavTransitions() {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+
+  // Select all internal anchor links in nav and hero
+  const links = document.querySelectorAll('nav a[href^="#"], .hero-btns .btn-outline, .hero-btns .btn-fill');
+  
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href') || (link.textContent.toLowerCase().includes('story') ? '#origin' : null);
+      if (!href || !href.startsWith('#') || href === '#') return;
+      
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      e.preventDefault();
+
+      // Start transition
+      preloader.classList.add('nav-transition');
+      preloader.classList.remove('loaded');
+
+      // Wait for curtain to close fully
+      setTimeout(() => {
+        window.scrollTo({
+          top: target.offsetTop,
+          behavior: 'auto' // Instant jump behind the curtain
+        });
+
+        // Re-open curtain
+        setTimeout(() => {
+          preloader.classList.add('loaded');
+          
+          // Clean up transition class after it's fully open
+          setTimeout(() => {
+            preloader.classList.remove('nav-transition');
+          }, 800);
+        }, 100);
+      }, 700); // 100ms before the 800ms CSS transition ends for smoothness
+    });
+  });
+}
 
 /* ─────────────────────────────────────────────
    INTRO SCROLL-DRIVEN FRAME SEQUENCE
@@ -162,6 +221,16 @@ if (track) track.innerHTML += track.innerHTML;
     const range    = scroller.offsetHeight - window.innerHeight; // total scrollable range
     if (range <= 0) return;
     tgtF = Math.max(0, Math.min(1, scrolled / range)) * (TOTAL - 1);
+
+    // ── Update nav visibility based on hero position ──
+    const nav = document.getElementById('main-nav');
+    if (nav) {
+      if (window.innerWidth <= 768 || scrolled >= range) {
+        nav.classList.remove('nav-hidden-hero');
+      } else {
+        nav.classList.add('nav-hidden-hero');
+      }
+    }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -199,72 +268,8 @@ if (scrollToTopBtn) {
   });
 }
 
-/* ─── TABLE BOOKING LOGIC ─── */
-window.selectTable = function(tableId) {
-  const allTables = document.querySelectorAll('.f-table');
-  const target = document.getElementById(tableId);
+/* ─── TABLE BOOKING LOGIC MOVED TO RESERVE.HTML ─── */
 
-  // Ignore if booked
-  if (!target || target.classList.contains('booked')) return;
-
-  // Deselect others
-  allTables.forEach(t => t.classList.remove('selected'));
-  
-  // Select clicked
-  target.classList.add('selected');
-
-  // Update UI Panel
-  const tableName = target.getAttribute('data-table');
-  const title = document.getElementById('bp-title');
-  const desc = document.getElementById('bp-desc');
-  const form = document.getElementById('bp-form');
-  const empty = document.getElementById('bp-empty');
-  const success = document.getElementById('bp-success');
-
-  if (title) title.textContent = 'Booking: ' + tableName;
-  if (desc) desc.style.display = 'block';
-  if (empty) empty.style.display = 'none';
-  if (success) success.style.display = 'none';
-  if (form) form.style.display = 'block';
-};
-
-window.confirmBooking = function(event) {
-  event.preventDefault();
-  
-  const submitBtn = document.getElementById('bp-btn-submit');
-  if (!submitBtn) return;
-  const originalText = submitBtn.textContent;
-  
-  submitBtn.textContent = 'Processing...';
-  submitBtn.style.opacity = '0.6';
-
-  setTimeout(() => {
-    submitBtn.textContent = originalText;
-    submitBtn.style.opacity = '1';
-
-    // Show Success, Hide Form
-    const form = document.getElementById('bp-form');
-    const desc = document.getElementById('bp-desc');
-    const title = document.getElementById('bp-title');
-    const success = document.getElementById('bp-success');
-
-    if (form) form.style.display = 'none';
-    if (desc) desc.style.display = 'none';
-    if (title) title.textContent = 'Confirmed!';
-    if (success) success.style.display = 'block';
-    
-    // Mark table as booked visually
-    const selected = document.querySelector('.f-table.selected');
-    if (selected) {
-      selected.classList.remove('selected');
-      selected.classList.add('booked');
-      selected.onclick = null; 
-      
-      const prevData = selected.getAttribute('data-table');
-      selected.setAttribute('data-table', prevData + ' (Booked)');
-    }
-  }, 1200);
-};
 
 /* ─── GSAP SCROLL & PARALLAX LOGIC ─── */
 if (typeof gsap !== 'undefined') {
@@ -379,3 +384,157 @@ if (typeof gsap !== 'undefined') {
     });
   });
 }
+
+/* ─── UTILITIES & FEEDBACK ─── */
+
+window.showToast = function(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <div class="toast-content">
+      <span class="toast-msg">${message}</span>
+    </div>
+  `;
+  document.body.appendChild(toast);
+
+  // Trigger reveal
+  requestAnimationFrame(() => toast.classList.add('show'));
+
+  // Remove after 3s
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+};
+
+/* ─── NEWSLETTER ─── */
+document.addEventListener('DOMContentLoaded', () => {
+  const nlBtn = document.querySelector('.nl-btn');
+  const nlInput = document.querySelector('.nl-input');
+
+  if (nlBtn && nlInput) {
+    nlBtn.addEventListener('click', () => {
+      const email = nlInput.value.trim();
+      if (!email || !email.includes('@')) {
+        window.showToast('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      nlBtn.textContent = 'Subscribing...';
+      nlBtn.disabled = true;
+
+      setTimeout(() => {
+        window.showToast('Welcome to the Valley! Check your inbox soon.');
+        nlInput.value = '';
+        nlBtn.textContent = 'Subscribe';
+        nlBtn.disabled = false;
+      }, 1500);
+    });
+  }
+});
+
+/* ─── SHARED ACTIONS ─── */
+window.scrollToSection = function(sectionId) {
+  const target = document.getElementById(sectionId);
+  if (target) {
+    window.scrollTo({
+      top: target.offsetTop - 80,
+      behavior: 'smooth'
+    });
+    
+    // Update active state in menu cat nav if present
+    document.querySelectorAll('.menu-cat-btn').forEach(btn => {
+      if (btn.getAttribute('onclick')?.includes(sectionId)) {
+        document.querySelectorAll('.menu-cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    });
+  }
+};
+
+// Global polyfill for coming soon links
+document.addEventListener('click', e => {
+  const link = e.target.closest('a');
+  if (link && link.getAttribute('href') === '#') {
+    e.preventDefault();
+    window.showToast('Article coming soon to the Journal.', 'info');
+  }
+});
+
+/* ─── Mobile Menu Toggle ─── */
+(function initMobileMenu() {
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const closeLinks = document.querySelectorAll('[data-mm-close]');
+
+  if (!toggle || !menu) return;
+
+  function toggleMenu() {
+    toggle.classList.toggle('active');
+    menu.classList.toggle('active');
+    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+  }
+
+  toggle.addEventListener('click', toggleMenu);
+
+  closeLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      toggle.classList.remove('active');
+      menu.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Handle nav visibility for mobile (independent of scroll-intro)
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    if (window.innerWidth <= 768 && nav) {
+      nav.classList.remove('nav-hidden-hero');
+    }
+  }, { passive: true });
+})();
+
+/* ─── Testimonial Auto-Scroll ─── */
+function initTestimonialAutoScroll() {
+  const grid = document.querySelector('.tp-grid');
+  if (!grid) return;
+
+  let interval;
+  let isInteracting = false;
+
+  const startAutoScroll = () => {
+    if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      // Only scroll on mobile and when not interacting
+      if (window.innerWidth > 768 || isInteracting) return;
+      
+      const cardWidth = grid.querySelector('.tp-card')?.offsetWidth + 20; // card + gap
+      if (!cardWidth) return;
+
+      const currentScroll = grid.scrollLeft;
+      const maxScroll = grid.scrollWidth - grid.offsetWidth;
+
+      if (currentScroll >= maxScroll - 10) {
+        // Loop back to start
+        grid.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        // Scroll to next card
+        grid.scrollTo({ left: currentScroll + cardWidth, behavior: 'smooth' });
+      }
+    }, 4000);
+  };
+
+  const stopAutoScroll = () => clearInterval(interval);
+
+  // Pause on interaction
+  grid.addEventListener('touchstart', () => { isInteracting = true; stopAutoScroll(); }, { passive: true });
+  grid.addEventListener('touchend', () => { 
+    isInteracting = false; 
+    // Wait a bit after interaction before resuming
+    setTimeout(startAutoScroll, 2000); 
+  }, { passive: true });
+
+  startAutoScroll();
+}
+
+console.log('ARAKU – Enhanced functionality & Mobile navigation initialized');
