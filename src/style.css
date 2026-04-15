@@ -3348,13 +3348,6 @@ footer {
     z-index: 2000; /* Higher than mobile-menu (1000) */
   }
 
-  .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-
   .nav-links, .nav-book-btn {
     display: none;
   }
@@ -3681,4 +3674,4 @@ footer {
     gap: 16px;
     text-align: center;
   }
-}
+}
