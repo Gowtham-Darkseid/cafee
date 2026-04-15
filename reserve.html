@@ -362,6 +362,62 @@
       { id: 'm4', name: 'Almond Croissant', price: 220, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=100' }
     ];
 
+    function getReservationEmailEndpoint() {
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      return isLocal ? '/api/send-reservation-email' : '/.netlify/functions/send-reservation-email';
+    }
+
+    function getSelectedPreorders() {
+      return preorders
+        .map(id => MENU.find(item => item.id === id))
+        .filter(Boolean)
+        .map(item => ({
+          name: item.name,
+          quantity: 1,
+          price: item.price
+        }));
+    }
+
+    function getPreorderTotal() {
+      return preorders.reduce((sum, id) => {
+        const item = MENU.find(m => m.id === id);
+        return sum + (item ? item.price : 0);
+      }, 0);
+    }
+
+    function buildReservationPayload() {
+      const name = document.getElementById('bk-name').value.trim();
+      const email = document.getElementById('bk-email').value.trim();
+      const phone = document.getElementById('bk-phone').value.trim();
+      const date = document.getElementById('bk-date').value;
+      const guests = document.getElementById('bk-guests').value;
+      const timeIn = document.getElementById('bk-time-in').value;
+      const timeOut = document.getElementById('bk-time-out').value;
+
+      if (!name || !email || !phone || !date || !guests || !timeIn || !timeOut || !selectedTable) {
+        return null;
+      }
+
+      return {
+        bookingId: `ARK-RSV-${Date.now()}`,
+        placedAt: new Date().toISOString(),
+        customer: {
+          name,
+          email,
+          phone
+        },
+        reservation: {
+          table: selectedTable,
+          date,
+          guests: Number(guests),
+          timeIn,
+          timeOut
+        },
+        preorders: getSelectedPreorders(),
+        totalPreorder: getPreorderTotal()
+      };
+    }
+
     function clearTableSelection() {
       document.querySelectorAll('.f-table.selected').forEach(t => t.classList.remove('selected'));
       selectedTable = null;
@@ -390,6 +446,8 @@
     }
 
     document.addEventListener('click', (e) => {
+      const bookingModal = document.getElementById('booking-modal');
+      if (bookingModal && bookingModal.classList.contains('visible')) return;
       if (!selectedTable) return;
       if (e.target.closest('.f-table') || e.target.closest('#selection-card')) return;
       clearTableSelection();
@@ -428,8 +486,24 @@
 
     window.bkNextStep = function() {
       if (currentStep === 1) {
-        if (!document.getElementById('bk-name').value || !document.getElementById('bk-phone').value) {
-          alert('Please provide contact details.'); return;
+        const required = [
+          document.getElementById('bk-name').value.trim(),
+          document.getElementById('bk-phone').value.trim(),
+          document.getElementById('bk-email').value.trim(),
+          document.getElementById('bk-date').value,
+          document.getElementById('bk-time-in').value,
+          document.getElementById('bk-time-out').value,
+          document.getElementById('bk-guests').value
+        ];
+
+        if (!selectedTable) {
+          alert('Please select a table first.');
+          return;
+        }
+
+        if (required.some(v => !v)) {
+          alert('Please fill all booking details before continuing.');
+          return;
         }
         window.bkGoToStep(2);
       } else if (currentStep === 2) {
@@ -492,14 +566,39 @@
       document.getElementById('sum-time').textContent = `${timeIn} to ${timeOut}`;
     }
 
-    window.bkConfirmFinal = function() {
+    window.bkConfirmFinal = async function() {
+      const payload = buildReservationPayload();
+      if (!payload) {
+        alert('Please complete your reservation details before confirming.');
+        return;
+      }
+
       const btn = document.getElementById('bk-btn-next');
+      const originalLabel = btn.textContent;
       btn.textContent = 'Syncing...';
       btn.style.opacity = '0.7';
-      
-      setTimeout(() => {
+
+      try {
+        const response = await fetch(getReservationEmailEndpoint(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok) {
+          throw new Error(data.message || 'Unable to send reservation confirmation email.');
+        }
+
         window.bkGoToStep(4);
-      }, 2000);
+      } catch (error) {
+        alert(error.message || 'Failed to confirm booking. Please try again.');
+      } finally {
+        btn.textContent = originalLabel;
+        btn.style.opacity = '1';
+      }
     }
   </script>
 </body>

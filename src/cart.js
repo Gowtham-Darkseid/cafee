@@ -347,29 +347,70 @@ if (chkClose) {
 
 const payBtn = document.getElementById('chk-pay-btn');
 if (payBtn) {
-  payBtn.addEventListener('click', () => {
+  payBtn.addEventListener('click', async () => {
+    const name = document.getElementById('cust-name').value.trim();
+    const email = document.getElementById('cust-email').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+
+    if (!name || !email || !phone) {
+      alert('Please complete your details before payment.');
+      return;
+    }
+
+    if (!cart.length) {
+      alert('Your cart is empty. Add items before payment.');
+      return;
+    }
+
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const orderPayload = {
+      orderId: `ARK-${Date.now()}`,
+      placedAt: new Date().toISOString(),
+      customer: { name, email, phone },
+      items: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        orderType: item.orderType || 'Standard'
+      })),
+      total: totalAmount
+    };
+
     const originalText = payBtn.textContent;
-    payBtn.textContent = 'Processing...';
+    payBtn.textContent = 'Sending confirmation...';
     payBtn.style.opacity = '0.6';
-    
-    setTimeout(() => {
-      payBtn.textContent = originalText;
-      payBtn.style.opacity = '1';
-      
-      const email = document.getElementById('cust-email').value;
-      if (email) {
-        document.getElementById('success-email').textContent = email;
+    payBtn.disabled = true;
+
+    try {
+      const res = await fetch('/.netlify/functions/send-order-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload)
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.message || 'Payment confirmation email failed.');
       }
-      
+
+      document.getElementById('success-email').textContent = email;
+
       // Step 3: Success
       chkFormArea.style.display = 'none';
       chkSuccessArea.style.display = 'block';
-      
+
       // Clear Cart
       cart = [];
       saveCart();
       updateNavBadge();
-    }, 1500);
+    } catch (error) {
+      alert(error.message || 'Could not send confirmation email. Please try again.');
+    } finally {
+      payBtn.textContent = originalText;
+      payBtn.style.opacity = '1';
+      payBtn.disabled = false;
+    }
   });
 }
 
