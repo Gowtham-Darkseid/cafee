@@ -470,6 +470,7 @@ document.addEventListener('click', e => {
   if (!toggle || !menu) return;
 
   function toggleMenu() {
+    if (window.innerWidth > 768) return;
     toggle.classList.toggle('active');
     menu.classList.toggle('active');
     document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
@@ -483,6 +484,14 @@ document.addEventListener('click', e => {
       menu.classList.remove('active');
       document.body.style.overflow = '';
     });
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      toggle.classList.remove('active');
+      menu.classList.remove('active');
+      document.body.style.overflow = '';
+    }
   });
 
   // Handle nav visibility for mobile (independent of scroll-intro)

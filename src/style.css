@@ -206,6 +206,11 @@ nav {
   gap: 24px;
 }
 
+.nav-hamburger,
+.mobile-menu {
+  display: none;
+}
+
 .nav-shop {
   font-size: 11px;
   font-weight: 500;
