@@ -132,6 +132,7 @@ const cartMarkup = `
 
 <div class="choice-modal" id="order-choice-modal">
   <div class="choice-box">
+    <button class="choice-close" id="choice-close" type="button" aria-label="Close order type popup">&times;</button>
     <h3 class="choice-title">Order Type</h3>
     <p class="choice-desc">How would you like to enjoy your Araku coffee today?</p>
     <div class="choice-btns">
@@ -169,7 +170,13 @@ const chkDetailsTotal = document.getElementById('chk-details-total');
 const chkFinalPrice = document.getElementById('chk-final-price');
 
 const choiceModal = document.getElementById('order-choice-modal');
+const choiceClose = document.getElementById('choice-close');
 let pendingProductId = null;
+
+function closeChoiceModal() {
+  if (choiceModal) choiceModal.classList.remove('visible');
+  pendingProductId = null;
+}
 
 // ─── CORE LOGIC ─── //
 function openCart() {
@@ -202,13 +209,14 @@ window.confirmOrderType = function(type) {
     cart.push({ ...product, quantity: 1, orderType: type });
   }
   
-  if (choiceModal) choiceModal.classList.remove('visible');
-  pendingProductId = null;
+  closeChoiceModal();
   
   saveCart();
   updateNavBadge();
   openCart(); 
 };
+
+window.closeOrderChoiceModal = closeChoiceModal;
 
 window.removeFromCart = function(id) {
   cart = cart.filter(item => item.id !== id);
@@ -277,6 +285,17 @@ function updateNavBadge() {
 // ─── EVENT LISTENERS ─── //
 if (overlay) overlay.addEventListener('click', closeCart);
 if (closeBtn) closeBtn.addEventListener('click', closeCart);
+if (choiceClose) choiceClose.addEventListener('click', closeChoiceModal);
+if (choiceModal) {
+  choiceModal.addEventListener('click', (e) => {
+    if (e.target === choiceModal) closeChoiceModal();
+  });
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && choiceModal && choiceModal.classList.contains('visible')) {
+    closeChoiceModal();
+  }
+});
 
 document.addEventListener('click', e => {
   if (e.target.closest('#open-cart')) {

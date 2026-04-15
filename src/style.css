@@ -3073,8 +3073,26 @@ footer {
   max-width: 500px;
   width: 90%;
   text-align: center;
+  position: relative;
   transform: translateY(20px);
   transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.choice-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 26px;
+  line-height: 1;
+  color: rgba(245,240,232,0.8);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.choice-close:hover {
+  color: var(--gold);
 }
 
 .choice-modal.visible .choice-box {
@@ -3149,6 +3167,31 @@ footer {
   overflow-y: auto;
   position: relative;
   padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(221,192,115,0.65) rgba(255,255,255,0.05);
+}
+
+.bk-box::-webkit-scrollbar,
+.bk-preorder-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.bk-box::-webkit-scrollbar-track,
+.bk-preorder-list::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+}
+
+.bk-box::-webkit-scrollbar-thumb,
+.bk-preorder-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold-lt), var(--gold));
+  border: 2px solid rgba(10, 14, 11, 0.95);
+  border-radius: 999px;
+}
+
+.bk-box::-webkit-scrollbar-thumb:hover,
+.bk-preorder-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #f6e7bd, var(--gold));
 }
 
 .bk-header {
@@ -3219,6 +3262,8 @@ footer {
   max-height: 300px;
   overflow-y: auto;
   padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(221,192,115,0.65) rgba(255,255,255,0.05);
 }
 
 .bk-menu-item {

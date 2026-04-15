@@ -362,12 +362,24 @@
       { id: 'm4', name: 'Almond Croissant', price: 220, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=100' }
     ];
 
+    function clearTableSelection() {
+      document.querySelectorAll('.f-table.selected').forEach(t => t.classList.remove('selected'));
+      selectedTable = null;
+      const selectionCard = document.getElementById('selection-card');
+      if (selectionCard) selectionCard.classList.remove('visible');
+    }
+
     window.selectTable = function(id) {
-      // Remove previous selection class
-      document.querySelectorAll('.f-table').forEach(t => t.classList.remove('selected'));
-      
       const table = document.getElementById(id);
-      if (table.classList.contains('booked')) return;
+      if (!table || table.classList.contains('booked')) return;
+
+      // Clicking the same selected table will deselect it.
+      if (table.classList.contains('selected')) {
+        clearTableSelection();
+        return;
+      }
+
+      document.querySelectorAll('.f-table.selected').forEach(t => t.classList.remove('selected'));
       
       table.classList.add('selected');
       selectedTable = table.getAttribute('data-table');
@@ -376,6 +388,12 @@
       document.getElementById('sc-table-name').textContent = selectedTable;
       document.getElementById('selection-card').classList.add('visible');
     }
+
+    document.addEventListener('click', (e) => {
+      if (!selectedTable) return;
+      if (e.target.closest('.f-table') || e.target.closest('#selection-card')) return;
+      clearTableSelection();
+    });
 
     window.confirmTableSelection = function() {
       if (!selectedTable) return;
